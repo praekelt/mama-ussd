@@ -144,8 +144,48 @@ describe("test_mama_ussd", function() {
             );
     });
 
+    it("unregistered users - prebirth - should be prompted for month", function () {
+        tester.check_state(null, "1", "register_prebirth_2",
+            "^In what month is your baby due\\?[^]" +
+            "1. Jan[^]"+
+            "2. Feb[^]" +
+            "3. March[^]" +
+            "4. April[^]" +
+            "5. May[^]" +
+            "6. June[^]" +
+            "7. July[^]" +
+            "8. Aug[^]" +
+            "9. Sept[^]" +
+            "10. Oct[^]" +
+            "11. Nov[^]" +
+            "12. Dec[^]" +
+            "13. Don't Know$"
+            );
+    });
 
-    it("unregistered users - prebirth - should ask them what month their baby is due", function () {
+    it("unregistered users - unknown should exit with message (part 1)", function () {
+        tester.check_state(null, "3", "register_all_endstate",
+            "^If you have missed a period and have 1 or more of these, do a pregnancy test: "+
+            "nausea or vomiting; tender breasts; often tired.[^]"+
+            "1. Read more$"
+            );
+    });
+
+    it("unregistered users - unknown should exit with message (part 2)", function () {
+        var user = {
+            current_state: 'register_all_endstate',
+            answers: {
+                register_all_1: '1'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "register_all_endstate2",
+            "^Don't wait! The first pregnancy check-up must happen as soon as you know. Do the test as soon as possible at any clinic, or get one at a pharmacy. Stay well.$");
+    });
+
+
+    it("unregistered users - prebirth - unknown should exit", function () {
         var user = {
             current_state: 'register_prebirth_2',
             answers: {
@@ -153,15 +193,10 @@ describe("test_mama_ussd", function() {
             }
         };
         tester.check_state(user,
-            '1',
-            "register_prebirth_2",
-            "^13");
+            '13',
+            "register_prebirth_2_endstate",
+            "^To sign up, we need to know which month. Please go to the clinic to find out, and dial us again.$");
     });
 
-    // // last test should 
-    // it('should go to end when asked for them to say someting', function() {
-    //     check_state({current_state: 'register_1_choice'}, 'Hello world!',
-    //         'end_state', '^Thank you and bye bye!');
-    // });
 
 });
