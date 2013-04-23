@@ -181,7 +181,9 @@ describe("test_mama_ussd", function() {
         tester.check_state(user,
             '1',
             "register_all_endstate2",
-            "^Don't wait! The first pregnancy check-up must happen as soon as you know. Do the test as soon as possible at any clinic, or get one at a pharmacy. Stay well.$");
+            "^Don't wait! The first pregnancy check-up must happen as soon as you " +
+            "know. Do the test as soon as possible at any clinic, or get one at a " +
+            "pharmacy. Stay well.$");
     });
 
 
@@ -195,7 +197,8 @@ describe("test_mama_ussd", function() {
         tester.check_state(user,
             '13',
             "register_prebirth_2_endstate",
-            "^To sign up, we need to know which month. Please go to the clinic to find out, and dial us again.$");
+            "^To sign up, we need to know which month. Please go to the clinic to " +
+            "find out, and dial us again.$");
     });
 
 
