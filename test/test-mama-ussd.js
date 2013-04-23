@@ -201,6 +201,196 @@ describe("test_mama_ussd", function() {
             "find out, and dial us again.$");
     });
 
+    it("unregistered users - postbirth - should be prompted for month old", function () {
+        tester.check_state(null, "2", "register_postbirth_2",
+            "^How many months old is your baby\\?[^]" +
+            "1. 1[^]"+
+            "2. 2[^]" +
+            "3. 3[^]" +
+            "4. 4[^]" +
+            "5. 5[^]" +
+            "6. 6[^]" +
+            "7. 7[^]" +
+            "8. 8[^]" +
+            "9. 9[^]" +
+            "10. 10[^]" +
+            "11. More than 10$"
+            );
+    });
+
+    it("unregistered users - postbirth - over 10 months should exit with message", function () {
+        var user = {
+            current_state: 'register_postbirth_2',
+            answers: {
+                register_all_1: '2'
+            }
+        };
+        tester.check_state(user,
+            '11',
+            "register_postbirth_2_endstate",
+            "^Sorry, the MAMA quizzes are aimed at mothers of younger babies. " +
+            "You can visit askmama.mobi to read useful info, and meet other moms. Stay well.$");
+    });
+
+    it("unregistered users - prebirth - get HIV information", function () {
+        var user = {
+            current_state: 'register_prebirth_2',
+            answers: {
+                register_all_1: '1'
+            }
+        };
+        tester.check_state(user, "1", "register_all_hivinfo",
+            "^Your quiz can include info on HIV. Would you like that\\?[^]" +
+            "1. Yes[^]"+
+            "2. No$"
+            );
+    });
+
+    it("unregistered users - postbirth - get HIV information", function () {
+        var user = {
+            current_state: 'register_prebirth_2',
+            answers: {
+                register_all_1: '2'
+            }
+        };
+        tester.check_state(user, "1", "register_all_hivinfo",
+            "^Your quiz can include info on HIV. Would you like that\\?[^]" +
+            "1. Yes[^]"+
+            "2. No$"
+            );
+    });
+
+    it("unregistered users - prebirth - sms opt in", function () {
+        var user = {
+            current_state: 'register_all_hivinfo',
+            answers: {
+                register_all_1: '1',
+                register_prebirth_2: '1'
+            }
+        };
+        tester.check_state(user, "1", "register_all_smsoptin",
+            "^We can send you sms's to remind you to take the next quiz. Would " +
+            "you like that\\?[^]" +
+            "1. Yes[^]"+
+            "2. No$"
+            );
+    });
+
+    it("unregistered users - postbirth - sms opt in", function () {
+        var user = {
+            current_state: 'register_all_hivinfo',
+            answers: {
+                register_all_1: '1',
+                register_postbirth_2: '1'
+            }
+        };
+        tester.check_state(user, "1", "register_all_smsoptin",
+            "^We can send you sms's to remind you to take the next quiz. Would " +
+            "you like that\\?[^]" +
+            "1. Yes[^]"+
+            "2. No$"
+            );
+    });
+
+    it("unregistered users - prebirth - thanks and want quiz", function () {
+        var user = {
+            current_state: 'register_all_smsoptin',
+            answers: {
+                register_all_1: '1',
+                register_prebirth_2: '1',
+                register_all_hivinfo: '1'
+            }
+        };
+        tester.check_state(user, "1", "register_all_thanksandstart",
+            "^Thank you! You can now start to learn by taking your first quiz. " +
+            "Start now\\?[^]" +
+            "1. Yes[^]"+
+            "2. No$"
+            );
+    });
+
+    it("unregistered users - postbirth - thanks and want quiz", function () {
+        var user = {
+            current_state: 'register_all_smsoptin',
+            answers: {
+                register_all_1: '2',
+                register_prebirth_2: '1',
+                register_all_hivinfo: '1'
+            }
+        };
+        tester.check_state(user, "1", "register_all_thanksandstart",
+            "^Thank you! You can now start to learn by taking your first quiz. " +
+            "Start now\\?[^]" +
+            "1. Yes[^]"+
+            "2. No$"
+            );
+    });
+
+    it("unregistered users - prebirth - end success", function () {
+        var user = {
+            current_state: 'register_all_thanksandstart',
+            answers: {
+                register_all_1: '1',
+                register_prebirth_2: '1',
+                register_all_hivinfo: '1',
+                register_all_smsoptin: '1'
+            }
+        };
+        tester.check_state(user, "2", "register_all_endsuccess",
+            "^Thanks for joining MAMA. Dial \\*120\\*2112\\# each week to start " +
+            "learning about your growing baby.$"
+            );
+    });
+
+    it("unregistered users - postbirth - end success", function () {
+        var user = {
+            current_state: 'register_all_thanksandstart',
+            answers: {
+                register_all_1: '2',
+                register_prebirth_2: '1',
+                register_all_hivinfo: '1',
+                register_all_smsoptin: '1'
+            }
+        };
+        tester.check_state(user, "2", "register_all_endsuccess",
+            "^Thanks for joining MAMA. Dial \\*120\\*2112\\# each week to start " +
+            "learning about your growing baby.$"
+            );
+    });
+
+    it("just registered users - prebirth - end quiz success", function () {
+        var user = {
+            current_state: 'register_all_thanksandstart',
+            answers: {
+                register_all_1: '1',
+                register_prebirth_2: '1',
+                register_all_hivinfo: '1',
+                register_all_smsoptin: '1'
+            }
+        };
+        tester.check_state(user, "1", "quiz_endsuccess",
+            "^Thanks for taking the quiz. Every week you will get a new quiz " +
+            "about your growing baby. Dial \\*120\\*2112\\* again next week to "+
+            "learn more.$"
+            );
+    });
+
+    it("just registered users - postbirth - end quiz success", function () {
+        var user = {
+            current_state: 'register_all_thanksandstart',
+            answers: {
+                register_all_1: '2',
+                register_prebirth_2: '1',
+                register_all_hivinfo: '1',
+                register_all_smsoptin: '1'
+            }
+        };
+        tester.check_state(user, "1", "quiz_endsuccess",
+            "^Thanks for taking the quiz. Every week you will get a new quiz " +
+            "about your growing baby. Dial \\*120\\*2112\\* again next week to "+
+            "learn more.$"
+            );
+    });
 
 });
 
