@@ -248,7 +248,7 @@ describe("test_mama_ussd", function() {
 
     it("unregistered users - postbirth - get HIV information", function () {
         var user = {
-            current_state: 'register_prebirth_2',
+            current_state: 'register_postbirth_2',
             answers: {
                 register_all_1: 'baby'
             }
