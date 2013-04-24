@@ -175,7 +175,7 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_endstate',
             answers: {
-                register_all_1: '1'
+                register_all_1: 'dontknow'
             }
         };
         tester.check_state(user,
@@ -191,7 +191,7 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_prebirth_2',
             answers: {
-                register_all_1: '1'
+                register_all_1: 'pregnant'
             }
         };
         tester.check_state(user,
@@ -222,7 +222,7 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_postbirth_2',
             answers: {
-                register_all_1: '2'
+                register_all_1: 'baby'
             }
         };
         tester.check_state(user,
@@ -236,7 +236,7 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_prebirth_2',
             answers: {
-                register_all_1: '1'
+                register_all_1: 'pregnant'
             }
         };
         tester.check_state(user, "1", "register_all_hivinfo",
@@ -250,7 +250,7 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_prebirth_2',
             answers: {
-                register_all_1: '2'
+                register_all_1: 'baby'
             }
         };
         tester.check_state(user, "1", "register_all_hivinfo",
@@ -264,8 +264,8 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_hivinfo',
             answers: {
-                register_all_1: '1',
-                register_prebirth_2: '1'
+                register_all_1: 'pregnant',
+                register_prebirth_2: '10'
             }
         };
         tester.check_state(user, "1", "register_all_smsoptin",
@@ -280,7 +280,7 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_hivinfo',
             answers: {
-                register_all_1: '1',
+                register_all_1: 'baby',
                 register_postbirth_2: '1'
             }
         };
@@ -296,9 +296,9 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_smsoptin',
             answers: {
-                register_all_1: '1',
+                register_all_1: 'pregnant',
                 register_prebirth_2: '1',
-                register_all_hivinfo: '1'
+                register_all_hivinfo: 'yes'
             }
         };
         tester.check_state(user, "1", "register_all_thanksandstart",
@@ -313,9 +313,9 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_smsoptin',
             answers: {
-                register_all_1: '2',
+                register_all_1: 'baby',
                 register_prebirth_2: '1',
-                register_all_hivinfo: '1'
+                register_all_hivinfo: 'yes'
             }
         };
         tester.check_state(user, "1", "register_all_thanksandstart",
@@ -330,10 +330,10 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
-                register_all_1: '1',
+                register_all_1: 'pregnant',
                 register_prebirth_2: '1',
-                register_all_hivinfo: '1',
-                register_all_smsoptin: '1'
+                register_all_hivinfo: 'yes',
+                register_all_smsoptin: 'yes'
             }
         };
         tester.check_state(user, "2", "register_all_endsuccess",
@@ -346,10 +346,10 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
-                register_all_1: '2',
+                register_all_1: 'baby',
                 register_prebirth_2: '1',
-                register_all_hivinfo: '1',
-                register_all_smsoptin: '1'
+                register_all_hivinfo: 'yes',
+                register_all_smsoptin: 'yes'
             }
         };
         tester.check_state(user, "2", "register_all_endsuccess",
@@ -362,10 +362,10 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
-                register_all_1: '1',
+                register_all_1: 'pregnant',
                 register_prebirth_2: '1',
-                register_all_hivinfo: '1',
-                register_all_smsoptin: '1'
+                register_all_hivinfo: 'yes',
+                register_all_smsoptin: 'yes'
             }
         };
         tester.check_state(user, "1", "quiz_endsuccess",
@@ -379,10 +379,10 @@ describe("test_mama_ussd", function() {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
-                register_all_1: '2',
+                register_all_1: 'baby',
                 register_prebirth_2: '1',
-                register_all_hivinfo: '1',
-                register_all_smsoptin: '1'
+                register_all_hivinfo: 'yes',
+                register_all_smsoptin: 'yes'
             }
         };
         tester.check_state(user, "1", "quiz_endsuccess",
