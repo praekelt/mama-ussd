@@ -20,3 +20,6 @@ This application provides registration for new users and quiz content for return
     $ npm install mocha vumigo_v01 jed
     $ npm test
 
+Though if you want nicer test output (includes test names etc.) run:
+
+    $ ./node_modules/.bin/mocha -R list
