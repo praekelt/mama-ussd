@@ -133,6 +133,15 @@ describe("test_mama_ussd", function() {
         // });
     });
 
+    var tester = new CustomTester(function (api) {
+        api.config_store.config = JSON.stringify({
+            sms_tag: ['pool', 'addr']
+        });
+        fixtures.forEach(function (f) {
+            api.load_http_fixture(f);
+        });
+    });
+
     // first test should always start 'null, null' because we haven't started interacting yet
     it("unregistered users - should be prompted for baby/no-baby state", function () {
         tester.check_state(null, null, "register_all_1",
@@ -358,7 +367,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it("just registered users - prebirth - end quiz success", function () {
+    it("just registered users - prebirth - start quiz", function () {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
@@ -368,14 +377,14 @@ describe("test_mama_ussd", function() {
                 register_all_smsoptin: 'yes'
             }
         };
-        tester.check_state(user, "1", "quiz_endsuccess",
-            "^Thanks for taking the quiz. Every week you will get a new quiz " +
-            "about your growing baby. Dial \\*120\\*2112\\* again next week to "+
-            "learn more.$"
+        tester.check_state(user, "1", "quiz_start",
+            "^Congrats on your pregnancy! What kind of foods should you eat now\\?[^]" +
+            "1. Fruit and vegetables[^]"+
+            "2. Chips and soda$"
             );
     });
 
-    it("just registered users - postbirth - end quiz success", function () {
+    it("just registered users - postbirth - start quiz", function () {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
@@ -385,12 +394,39 @@ describe("test_mama_ussd", function() {
                 register_all_smsoptin: 'yes'
             }
         };
-        tester.check_state(user, "1", "quiz_endsuccess",
-            "^Thanks for taking the quiz. Every week you will get a new quiz " +
-            "about your growing baby. Dial \\*120\\*2112\\* again next week to "+
-            "learn more.$"
+        tester.check_state(user, "1", "quiz_start",
+            "^Congrats on your pregnancy! What kind of foods should you eat now\\?[^]" +
+            "1. Fruit and vegetables[^]"+
+            "2. Chips and soda$"
             );
     });
+
+    it("just registered users - prebirth - answer quiz", function () {
+        var user = {
+            current_state: 'quiz_start',
+            answers: {
+                register_all_1: 'pregnant',
+                register_prebirth_2: '1',
+                register_all_hivinfo: 'yes',
+                register_all_smsoptin: 'yes',
+                quiz_start: 'q_1_a_1'
+            }
+        };
+        tester.check_state(user, "1", "q_1_a_1",
+            "^Yes! It's time to eat plenty of healthy fruits and vegetables to" +
+            " nourish your growing baby.[^]" +
+            "1. Next$"
+            );
+    });
+
+    // first quiz test should always start 'null, null' because we haven't started interacting yet
+    // it("registered users - prebirth - load week 1", function () {
+    //     var user = {
+    //         current_state: 'quiz_entry'
+    //     }
+    //     tester.check_state(null, null, "quiz_entry",
+    //         "^Congrats on your pregnancy! What kind of foods should you eat now\\?$");
+    // });
 
 });
 
