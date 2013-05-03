@@ -128,133 +128,7 @@ describe("test_mama_ussd", function() {
 
     var tester = new CustomTester(function (api) {
         api.config_store.config = JSON.stringify({
-            quiz_data: {
-                        "5": {
-                            "start": "q_1",
-                            "end": "Thanks! Goodbye!",
-                            "quiz_details": {
-                                "answers": {
-                                    "q_3_a_1": {
-                                        "response": "Yes - your baby is only just the size of a very small bean, but he already has tiny hands and feet. His heart is beating twice as fast as yours.",
-                                        "next": "end"
-                                    },
-                                    "q_1_a_2": {
-                                        "response": "No - try to avoid junk food that is high in fat & sugar. Now is the time to eat plenty of healthy fruits and vegetables to nourish your growing baby.",
-                                        "next": "q_2"
-                                    },
-                                    "q_1_a_1": {
-                                        "response": "Yes! It's time to eat plenty of healthy fruits and vegetables to nourish your growing baby.",
-                                        "next": "q_2"
-                                    },
-                                    "q_3_a_2": {
-                                        "response": "No - your baby is only just the size of a very small bean, but he already has tiny hands and feet. His heart is beating twice as fast as yours.",
-                                        "next": "end"
-                                    },
-                                    "q_2_a_1": {
-                                        "response": "Yes! Knowing your HIV status is very important in pregnancy. You can help to keep your baby HIV negative.",
-                                        "next": "q_3"
-                                    },
-                                    "q_2_a_2": {
-                                        "response": "No - knowing your HIV status really does matter in pregnancy. You can help to keep your baby HIV negative.",
-                                        "next": "q_3"
-                                    }
-                                },
-                                "questions": {
-                                    "q_3": {
-                                        "question": "How big is your baby right now?",
-                                        "choices": [
-                                            [
-                                                "q_3_a_1",
-                                                "The size of a small bean"
-                                            ],
-                                            [
-                                                "q_3_a_2",
-                                                "The size of a lemon"
-                                            ]
-                                        ]
-                                    },
-                                    "q_2": {
-                                        "question": "Is it important to know your HIV status when you're pregnant?",
-                                        "choices": [
-                                            [
-                                                "q_2_a_1",
-                                                "Yes, very important"
-                                            ],
-                                            [
-                                                "q_2_a_2",
-                                                "No, it doesn't matter"
-                                            ]
-                                        ]
-                                    },
-                                    "q_1": {
-                                        "question": "Congrats on your pregnancy! What kind of foods should you eat now?",
-                                        "choices": [
-                                            [
-                                                "q_1_a_1",
-                                                "Fruit and vegetables"
-                                            ],
-                                            [
-                                                "q_1_a_2",
-                                                "Chips and soda"
-                                            ]
-                                        ]
-                                    }
-                                }
-                            }
-                        },
-                        "6": {
-                            "start": "q_1",
-                            "end": "Thanks! Goodbye!",
-                            "quiz_details": {
-                                "answers": {
-                                    "q_1_a_2": {
-                                        "response": "No - you are not alone. Speak to a sister or social worker at the clinic or a friend, or call Marie Stopes on 0800 117 785.",
-                                        "next": "q_2"
-                                    },
-                                    "q_1_a_1": {
-                                        "response": "Yes - you can speak to a sister or social worker at the clinic, a friend, or call Marie Stopes on 0800 117 785.",
-                                        "next": "q_2"
-                                    },
-                                    "q_2_a_2": {
-                                        "response": "No - your baby needs chicken, red meat, fruit & vegetables (especially green ones) to keep healthy and grow.",
-                                        "next": "end"
-                                    },
-                                    "q_2_a_1": {
-                                        "response": "Yes - eat lots of chicken, red meat, fruit & vegetables (especially green ones) to help keep you & your baby well.",
-                                        "next": "end"
-                                    }
-                                },
-                                "questions": {
-                                    "q_2": {
-                                        "question": "What should you eat to keep you and your baby healthy?",
-                                        "choices": [
-                                            [
-                                                "q_2_a_1",
-                                                "Eat meat, fruits and vegetables"
-                                            ],
-                                            [
-                                                "q_2_a_2",
-                                                "Eat junk food"
-                                            ]
-                                        ]
-                                    },
-                                    "q_1": {
-                                        "question": "What if you are worried you won't cope with a baby?",
-                                        "choices": [
-                                            [
-                                                "q_1_a_1",
-                                                "You can speak to someone"
-                                            ],
-                                            [
-                                                "q_1_a_2",
-                                                "You should keep it to yourself"
-                                            ]
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
+            quiz_data: JSON.parse(fs.readFileSync("fixtures/quiz-content.json"))
         });
         fixtures.forEach(function (f) {
             api.load_http_fixture(f);
@@ -542,7 +416,7 @@ describe("test_mama_ussd", function() {
     it.skip("registered users - prebirth - load week 1", function () {
         var user = {
             current_state: 'quiz_entry'
-        }
+        };
         tester.check_state(null, null, "quiz_entry",
             "^Congrats on your pregnancy! What kind of foods should you eat now\\?$");
     });
