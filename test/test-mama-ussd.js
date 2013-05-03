@@ -135,6 +135,25 @@ describe("test_mama_ussd", function() {
         });
     });
 
+    describe('unregistered users', function() {
+        describe('pre-birth', function() {
+            it('should contain pre-birth tests', function() {
+                assert.ok(1);
+            });
+        });
+
+        describe('post-birth', function() {
+            it('should contain post-birth tests', function() {
+                assert.ok(1);
+            });
+        });
+
+        describe('unknown', function() {
+            it('should contain unknown stage tests', function() {
+                assert.ok(1);
+            });
+        });
+    });
     // first test should always start 'null, null' because we haven't started interacting yet
     it("unregistered users - should be prompted for baby/no-baby state", function () {
         tester.check_state(null, null, "register_all_1",
