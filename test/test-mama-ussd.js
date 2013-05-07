@@ -116,17 +116,14 @@ describe("test_api", function() {
     });
 });
 
-// YOUR TESTS START HERE
-// CHANGE THIS to test_your_app_name
-describe("test_mama_ussd", function() {
-
+function get_tester() {
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
     var fixtures = [
        //'test/fixtures/example-geolocation.json'
     ];
 
-    var tester = new CustomTester(function (api) {
+    return new CustomTester(function (api) {
         api.config_store.config = JSON.stringify({
             quiz_data: JSON.parse(fs.readFileSync("fixtures/quiz-content.json")),
             contact_data: JSON.parse(fs.readFileSync("fixtures/user-pregnant.json"))
@@ -135,26 +132,15 @@ describe("test_mama_ussd", function() {
             api.load_http_fixture(f);
         });
     });
+}
 
-    describe('unregistered users', function() {
-        describe('pre-birth', function() {
-            it('should contain pre-birth tests', function() {
-                assert.ok(1);
-            });
-        });
 
-        describe('post-birth', function() {
-            it('should contain post-birth tests', function() {
-                assert.ok(1);
-            });
-        });
+// YOUR TESTS START HERE
+// CHANGE THIS to test_your_app_name
+describe("test_mama_ussd", function() {
 
-        describe('unknown', function() {
-            it('should contain unknown stage tests', function() {
-                assert.ok(1);
-            });
-        });
-    });
+    var tester = get_tester();
+
     // first test should always start 'null, null' because we haven't started interacting yet
     // this will be the first test when we aren't running quiz test
     it.skip("unregistered users - should be prompted for baby/no-baby state", function () {
