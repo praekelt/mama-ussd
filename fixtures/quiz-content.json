@@ -1,5 +1,5 @@
 {
-  "5": {
+  "prebirth_5": {
     "start": "q_1",
     "end": "Thanks! Goodbye!",
     "quiz_details": {
@@ -72,7 +72,7 @@
       }
     }
   },
-  "6": {
+  "prebirth_6": {
     "start": "q_1",
     "end": "Thanks! Goodbye!",
     "quiz_details": {
@@ -123,5 +123,109 @@
         }
       }
     }
-  }
+  },
+  "postbirth_5": {
+        "start": "q_1",
+        "end": "Thanks! Goodbye!",
+        "quiz_details": {
+            "answers": {
+                "q_1_a_2": {
+                    "response": "Incorrect - your baby needs to be registered before he is 30 days old. Do this at Home Affairs. Then you can apply for the child grant at SASSA.",
+                    "next": "q_2"
+                },
+                "q_1_a_1": {
+                    "response": "Correct - your baby needs to be registered before he is 30 days old. Do this at Home Affairs. Then you can apply for the child grant at SASSA.",
+                    "next": "q_2"
+                },
+                "q_2_a_2": {
+                    "response": "Correct - baby's tummy, hands & feet should be warm (not hot, cold or blue). His eyes & skin shouldn't be yellow. For any of these, visit the",
+                    "next": "end"
+                },
+                "q_2_a_1": {
+                    "response": "Incorrect - baby's tummy, hands & feet should be warm (not hot, cold or blue). His eyes & skin shouldn't be yellow. For any of these, visit the",
+                    "next": "end"
+                }
+            },
+            "questions": {
+                "q_2": {
+                    "question": "Is it okay if your baby's body is cold, or his eyes are yellow?",
+                    "choices": [
+                        [
+                            "q_2_a_1",
+                            "Yes"
+                        ],
+                        [
+                            "q_2_a_2",
+                            "No"
+                        ]
+                    ]
+                },
+                "q_1": {
+                    "question": "When does your baby's birth need to be registered with Home Affairs?",
+                    "choices": [
+                        [
+                            "q_1_a_1",
+                            "Within 30 days of birth"
+                        ],
+                        [
+                            "q_1_a_2",
+                            "Within 3 months"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "postbirth_6": {
+        "start": "q_1",
+        "end": "Thanks! Goodbye!",
+        "quiz_details": {
+            "answers": {
+                "q_1_a_2": {
+                    "response": "Incorrect! Feeling sad? Not enjoying anything? This is common in new moms. Call 0117281347 or talk to a health worker about this; you may be depressed.",
+                    "next": "q_2"
+                },
+                "q_1_a_1": {
+                    "response": "Correct - feeling sad? Not enjoying anything? This is common in new moms. Call",
+                    "next": "q_2"
+                },
+                "q_2_a_2": {
+                    "response": "No! Baby needs a good mouthful of breast & to squeeze it to get milk. If his mouth is wide open & muscles by his ear move, he's attached right.",
+                    "next": "end"
+                },
+                "q_2_a_1": {
+                    "response": "Yes! Baby needs a good mouthful of breast & to squeeze it to get milk. If his mouth is wide open & muscles by his ear move, he's attached right.",
+                    "next": "end"
+                }
+            },
+            "questions": {
+                "q_2": {
+                    "question": "How do you know your baby is drinking from your breast properly?",
+                    "choices": [
+                        [
+                            "q_2_a_1",
+                            "He needs a mouthful of breast"
+                        ],
+                        [
+                            "q_2_a_2",
+                            "It's OK if he just attaches to the nipple"
+                        ]
+                    ]
+                },
+                "q_1": {
+                    "question": "Is it common for new mothers to feel sad?",
+                    "choices": [
+                        [
+                            "q_1_a_1",
+                            "It is normal and you can call someone for support"
+                        ],
+                        [
+                            "q_1_a_2",
+                            "No - only weak people feel sad"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
 }

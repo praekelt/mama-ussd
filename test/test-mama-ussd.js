@@ -28,7 +28,7 @@ function check_state(user, content, next_state, expected_response, setup,
                      teardown) {
     // setup api
     var api = fresh_api();
-    var from_addr = "1234567";
+    var from_addr = "+27831234567";
     var user_key = "users." + from_addr;
     api.kv_store[user_key] = user;
 
@@ -128,7 +128,8 @@ describe("test_mama_ussd", function() {
 
     var tester = new CustomTester(function (api) {
         api.config_store.config = JSON.stringify({
-            quiz_data: JSON.parse(fs.readFileSync("fixtures/quiz-content.json"))
+            quiz_data: JSON.parse(fs.readFileSync("fixtures/quiz-content.json")),
+            contact_data: JSON.parse(fs.readFileSync("fixtures/user-pregnant.json"))
         });
         fixtures.forEach(function (f) {
             api.load_http_fixture(f);
@@ -155,7 +156,8 @@ describe("test_mama_ussd", function() {
         });
     });
     // first test should always start 'null, null' because we haven't started interacting yet
-    it("unregistered users - should be prompted for baby/no-baby state", function () {
+    // this will be the first test when we aren't running quiz test
+    it.skip("unregistered users - should be prompted for baby/no-baby state", function () {
         tester.check_state(null, null, "register_all_1",
             "^Welcome to MAMA. To give U the best information possible we need to " +
             "ask U a few questions. Are U pregnant, or do U have a baby\\?[^]" +
@@ -164,6 +166,57 @@ describe("test_mama_ussd", function() {
             "3. Don't Know$"
             );
     });
+
+    // This is for testing mode only when needing to access random quiz weeks
+    it("test users - should be prompted for baby/no-baby state", function () {
+        tester.check_state(null, null, "register_all_1",
+            "^Welcome to MAMA. To give U the best information possible we need to " +
+            "ask U a few questions. Are U pregnant, or do U have a baby\\?[^]" +
+            "1. Pregnant[^]"+
+            "2. Baby[^]" +
+            "3. Start quiz$"
+            );
+    });
+
+    it("test users - quiz access - should be prompted for baby/no-baby state", function () {
+        tester.check_state(null, "3", "quiz_start",
+            "^Quiz for pregnant or baby\\?[^]" +
+            "1. Pregnant[^]"+
+            "2. Baby$"
+            );
+    });
+
+    it("test users - quiz access - enter week", function () {
+        var user = {
+            current_state: 'quiz_start',
+            answers: {
+                register_all_1: 'quiz_start'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "quiz_start_week",
+            "^What week\\?[^]" +
+            "1. 5[^]"+
+            "2. 6$");
+    });
+
+    it("test users - quiz access - prebirth week 5", function () {
+        var user = {
+            current_state: 'quiz_start_week',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'prebirth'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "prebirth_5_q_1",
+            "^Congrats on your pregnancy! What kind of foods should you eat now\\?[^]" +
+            "1. Fruit and vegetables[^]"+
+            "2. Chips and soda$");
+    });
+
 
     it("unregistered users - prebirth - should be prompted for month", function () {
         tester.check_state(null, "1", "register_prebirth_2",
@@ -192,7 +245,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - unknown should exit with message (part 2)", function () {
+    it("unregistered users - unknown should exit with message (part 2)", function () {
         var user = {
             current_state: 'register_all_endstate',
             answers: {
@@ -208,7 +261,7 @@ describe("test_mama_ussd", function() {
     });
 
 
-    it.skip("unregistered users - prebirth - unknown should exit", function () {
+    it("unregistered users - prebirth - unknown should exit", function () {
         var user = {
             current_state: 'register_prebirth_2',
             answers: {
@@ -222,7 +275,7 @@ describe("test_mama_ussd", function() {
             "find out, and dial us again.$");
     });
 
-    it.skip("unregistered users - postbirth - should be prompted for month old", function () {
+    it("unregistered users - postbirth - should be prompted for month old", function () {
         tester.check_state(null, "2", "register_postbirth_2",
             "^How many months old is your baby\\?[^]" +
             "1. 1[^]"+
@@ -239,7 +292,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - postbirth - over 10 months should exit with message", function () {
+    it("unregistered users - postbirth - over 10 months should exit with message", function () {
         var user = {
             current_state: 'register_postbirth_2',
             answers: {
@@ -253,7 +306,7 @@ describe("test_mama_ussd", function() {
             "You can visit askmama.mobi to read useful info, and meet other moms. Stay well.$");
     });
 
-    it.skip("unregistered users - prebirth - get HIV information", function () {
+    it("unregistered users - prebirth - get HIV information", function () {
         var user = {
             current_state: 'register_prebirth_2',
             answers: {
@@ -267,7 +320,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - postbirth - get HIV information", function () {
+    it("unregistered users - postbirth - get HIV information", function () {
         var user = {
             current_state: 'register_postbirth_2',
             answers: {
@@ -281,7 +334,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - prebirth - sms opt in", function () {
+    it("unregistered users - prebirth - sms opt in", function () {
         var user = {
             current_state: 'register_all_hivinfo',
             answers: {
@@ -297,7 +350,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - postbirth - sms opt in", function () {
+    it("unregistered users - postbirth - sms opt in", function () {
         var user = {
             current_state: 'register_all_hivinfo',
             answers: {
@@ -313,7 +366,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - prebirth - thanks and want quiz", function () {
+    it("unregistered users - prebirth - thanks and want quiz", function () {
         var user = {
             current_state: 'register_all_smsoptin',
             answers: {
@@ -330,7 +383,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - postbirth - thanks and want quiz", function () {
+    it("unregistered users - postbirth - thanks and want quiz", function () {
         var user = {
             current_state: 'register_all_smsoptin',
             answers: {
@@ -347,7 +400,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - prebirth - end success", function () {
+    it("unregistered users - prebirth - end success", function () {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
@@ -363,7 +416,7 @@ describe("test_mama_ussd", function() {
             );
     });
 
-    it.skip("unregistered users - postbirth - end success", function () {
+    it("unregistered users - postbirth - end success", function () {
         var user = {
             current_state: 'register_all_thanksandstart',
             answers: {
