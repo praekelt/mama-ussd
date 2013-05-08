@@ -203,6 +203,163 @@ describe("test_mama_ussd", function() {
             "2. Chips and soda$");
     });
 
+    it("test users - quiz access - prebirth week 5 - answer correct", function () {
+        var user = {
+            current_state: 'prebirth_5_q_1',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'prebirth',
+                quiz_start_week: '5'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "prebirth_5_q_1_a_1",
+            "^Yes! It's time to eat plenty of healthy fruits and vegetables to " +
+            "nourish your growing baby.[^]" +
+            "1. Next$");
+    });
+
+    it("test users - quiz access - prebirth week 5 - answer wrong", function () {
+        var user = {
+            current_state: 'prebirth_5_q_1',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'prebirth',
+                quiz_start_week: '5'
+            }
+        };
+        tester.check_state(user,
+            '2',
+            "prebirth_5_q_1_a_2",
+            "^No - try to avoid junk food that is high in fat & sugar. Now is " +
+            "the time to eat plenty of healthy fruits and vegetables to nourish " +
+            "your growing baby.[^]" +
+            "1. Next$");
+    });
+
+    it("test users - quiz access - postbirth week 6", function () {
+        var user = {
+            current_state: 'quiz_start_week',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'postbirth'
+            }
+        };
+        tester.check_state(user,
+            '2',
+            "postbirth_6_q_1",
+            "^Is it common for new mothers to feel sad\\?[^]" +
+            "1. It is normal and you can call someone for support[^]"+
+            "2. No - only weak people feel sad$");
+    });
+
+    it("test users - quiz access - postbirth week 5 - answer correct", function () {
+        var user = {
+            current_state: 'postbirth_6_q_1',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'postbirth',
+                quiz_start_week: '6'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "postbirth_6_q_1_a_1",
+            "^Correct - feeling sad\\? Not enjoying anything\\? This is common in " +
+            "new moms. Call[^]" +
+            "1. Next$");
+    });
+
+    it("test users - quiz access - postbirth week 6 - answer wrong", function () {
+        var user = {
+            current_state: 'postbirth_6_q_1',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'postbirth',
+                quiz_start_week: '6'
+            }
+        };
+        tester.check_state(user,
+            '2',
+            "postbirth_6_q_1_a_2",
+            "^Incorrect! Feeling sad\\? Not enjoying anything\\? This is common " +
+            "in new moms. Call 0117281347 or talk to a health worker about " +
+            "this; you may be depressed.[^]" +
+            "1. Next$");
+    });
+
+    it("test users - quiz access - postbirth week 6 - Q2", function () {
+        var user = {
+            current_state: 'postbirth_6_q_1_a_1',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'postbirth',
+                quiz_start_week: '6',
+                postbirth_6_q_1: 'postbirth_6_q_1_a_1'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "postbirth_6_q_2",
+            "^How do you know your baby is drinking from your breast properly\\?[^]" +
+            "1. He needs a mouthful of breast[^]"+
+            "2. It's OK if he just attaches to the nipple$");
+    });
+
+    it("test users - quiz access - postbirth week 6 - Q2 - answer correct", function () {
+        var user = {
+            current_state: 'postbirth_6_q_2',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'postbirth',
+                quiz_start_week: '6',
+                postbirth_6_q_1: 'postbirth_6_q_1_a_1'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "postbirth_6_q_2_a_1",
+            "^Yes! Baby needs a good mouthful of breast & to squeeze it to get " +
+            "milk. If his mouth is wide open & muscles by his ear move, he's " +
+            "attached right.[^]" +
+            "1. Next$");
+    });
+
+    it("test users - quiz access - postbirth week 6 - Q2 - answer wrong", function () {
+        var user = {
+            current_state: 'postbirth_6_q_2',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'postbirth',
+                quiz_start_week: '6',
+                postbirth_6_q_1: 'postbirth_6_q_1_a_1'
+            }
+        };
+        tester.check_state(user,
+            '2',
+            "postbirth_6_q_2_a_2",
+            "^No! Baby needs a good mouthful of breast & to squeeze it to get milk. " +
+            "If his mouth is wide open & muscles by his ear move, he's attached right.[^]" +
+            "1. Next$");
+    });
+
+    it("test users - quiz access - postbirth week 6 - end", function () {
+        var user = {
+            current_state: 'postbirth_6_q_2_a_2',
+            answers: {
+                register_all_1: 'quiz_start',
+                quiz_start: 'postbirth',
+                quiz_start_week: '6',
+                postbirth_6_q_1: 'postbirth_6_q_1_a_1'
+            }
+        };
+        tester.check_state(user,
+            '1',
+            "postbirth_6_end",
+            "^Thanks! Goodbye!$");
+    });
+
 
     it("unregistered users - prebirth - should be prompted for month", function () {
         tester.check_state(null, "1", "register_prebirth_2",
