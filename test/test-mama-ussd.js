@@ -480,6 +480,14 @@ describe("On MAMA USSD line", function() {
             weekofpreg = state_creator.calc_weeks(today, 1);
             assert.equal(weekofpreg, 6);
         });
+
+        it("prebirth, detects a due month too far in future", function(){
+            // http://www.pregnology.com/faralong.php?month=1&day=14&year=2014
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,4,21);
+            var weekofpreg = state_creator.calc_weeks(today, 3);
+            assert.equal(weekofpreg, false);
+        });
     });
 
     describe("registered users", function() {
