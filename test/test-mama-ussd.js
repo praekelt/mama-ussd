@@ -63,7 +63,7 @@ describe("On MAMA USSD line", function() {
                         reply({
                             success: true,
                             created: false,
-                            contact: api._dummy_contacts[cmd.addr]
+                            contact: reply_contact
                         });
                     } else {
                         api._dummy_contacts['contact-key'] = api._new_contact;
@@ -469,6 +469,17 @@ describe("On MAMA USSD line", function() {
             });
             p.then(done, done);
         });
+
+        it("prebirth, gives a correct weeks-of-pregnancy calculation", function(){
+            // http://www.pregnology.com/faralong.php?month=1&day=14&year=2014
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,4,14);
+            var weekofpreg = state_creator.calc_weeks(today, 1);
+            assert.equal(weekofpreg, 5);
+            today = new Date(2013,4,21);
+            weekofpreg = state_creator.calc_weeks(today, 1);
+            assert.equal(weekofpreg, 6);
+        });
     });
 
     describe("registered users", function() {
@@ -528,7 +539,7 @@ describe("On MAMA USSD line", function() {
                         reply({
                             success: true,
                             created: false,
-                            contact: api._dummy_contacts[cmd.addr]
+                            contact: reply_contact
                         });
                     } else {
                         api._dummy_contacts['contact-key'] = api._new_contact;
