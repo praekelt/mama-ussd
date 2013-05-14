@@ -101,7 +101,7 @@ describe("On MAMA USSD line", function() {
             var p = tester.check_state({
                 user: null,
                 content: null,
-                next_state: "register_all_1",
+                next_state: "initial_state",
                 response: "^Welcome to MAMA. To give U the best information possible we need to " +
                 "ask U a few questions. Are U pregnant, or do U have a baby\\?[^]" +
                 "1. Pregnant[^]"+
@@ -127,7 +127,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_endstate',
                 answers: {
-                    register_all_1: 'dontknow'
+                    initial_state: 'dontknow'
                 }
             };
             var p = tester.check_state({
@@ -169,7 +169,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_prebirth_2',
                 answers: {
-                    register_all_1: 'pregnant'
+                    initial_state: 'pregnant'
                 }
             };
             var p = tester.check_state({
@@ -207,7 +207,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_postbirth_2',
                 answers: {
-                    register_all_1: 'baby'
+                    initial_state: 'baby'
                 }
             };
             var p = tester.check_state({
@@ -225,7 +225,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_prebirth_2',
                 answers: {
-                    register_all_1: 'pregnant',
+                    initial_state: 'pregnant',
                     register_prebirth_2: '1'
                 }
             };
@@ -244,7 +244,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_postbirth_2',
                 answers: {
-                    register_all_1: 'baby',
+                    initial_state: 'baby',
                     register_postbirth_2: '1'
                 }
             };
@@ -263,7 +263,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_hivinfo',
                 answers: {
-                    register_all_1: 'pregnant',
+                    initial_state: 'pregnant',
                     register_prebirth_2: '1'
                 }
             };
@@ -283,7 +283,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_hivinfo',
                 answers: {
-                    register_all_1: 'baby',
+                    initial_state: 'baby',
                     register_postbirth_2: '1'
                 }
             };
@@ -303,7 +303,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_smsoptin',
                 answers: {
-                    register_all_1: 'pregnant',
+                    initial_state: 'pregnant',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes'
                 }
@@ -324,7 +324,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_smsoptin',
                 answers: {
-                    register_all_1: 'baby',
+                    initial_state: 'baby',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes'
                 }
@@ -345,7 +345,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_thanksandstart',
                 answers: {
-                    register_all_1: 'pregnant',
+                    initial_state: 'pregnant',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
@@ -366,7 +366,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_thanksandstart',
                 answers: {
-                    register_all_1: 'baby',
+                    initial_state: 'baby',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
@@ -387,7 +387,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_thanksandstart',
                 answers: {
-                    register_all_1: 'pregnant',
+                    initial_state: 'pregnant',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
@@ -408,7 +408,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'register_all_thanksandstart',
                 answers: {
-                    register_all_1: 'baby',
+                    initial_state: 'baby',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
@@ -429,7 +429,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'prebirth_5_q_1',
                 answers: {
-                    register_all_1: 'pregnant',
+                    initial_state: 'pregnant',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes',
@@ -451,7 +451,7 @@ describe("On MAMA USSD line", function() {
             var user = {
                 current_state: 'prebirth_5_q_1',
                 answers: {
-                    register_all_1: 'pregnant',
+                    initial_state: 'pregnant',
                     register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes',
@@ -583,7 +583,7 @@ describe("On MAMA USSD line", function() {
             var p = tester.check_state({
                 user: null,
                 content: null,
-                next_state: "register_all_1",
+                next_state: "initial_state",
                 response: "^Welcome to MAMA. To give U the best information possible we need to " +
                 "ask U a few questions. Are U pregnant, or do U have a baby\\?[^]" +
                 "1. Pregnant[^]"+
@@ -606,7 +606,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'quiz_start',
         //         answers: {
-        //             register_all_1: 'quiz_start'
+        //             initial_state: 'quiz_start'
         //         }
         //     };
         //     var p = tester.check_state(
@@ -622,7 +622,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'quiz_start_week',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'prebirth'
         //         }
         //     };
@@ -639,7 +639,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'prebirth_5_q_1',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'prebirth',
         //             quiz_start_week: '5'
         //         }
@@ -657,7 +657,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'prebirth_5_q_1',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'prebirth',
         //             quiz_start_week: '5'
         //         }
@@ -676,7 +676,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'quiz_start_week',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'postbirth'
         //         }
         //     };
@@ -693,7 +693,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'postbirth_6_q_1',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'postbirth',
         //             quiz_start_week: '6'
         //         }
@@ -711,7 +711,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'postbirth_6_q_1',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'postbirth',
         //             quiz_start_week: '6'
         //         }
@@ -730,7 +730,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'postbirth_6_q_1_a_1',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'postbirth',
         //             quiz_start_week: '6',
         //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
@@ -749,7 +749,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'postbirth_6_q_2',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'postbirth',
         //             quiz_start_week: '6',
         //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
@@ -769,7 +769,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'postbirth_6_q_2',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'postbirth',
         //             quiz_start_week: '6',
         //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
@@ -788,7 +788,7 @@ describe("On MAMA USSD line", function() {
         //     var user = {
         //         current_state: 'postbirth_6_q_2_a_2',
         //         answers: {
-        //             register_all_1: 'quiz_start',
+        //             initial_state: 'quiz_start',
         //             quiz_start: 'postbirth',
         //             quiz_start_week: '6',
         //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
