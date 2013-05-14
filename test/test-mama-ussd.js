@@ -37,7 +37,7 @@ describe("On MAMA USSD line", function() {
                 });
                 api._dummy_contacts = {};
                 api._new_contact = {
-                    key: 'contact_key',
+                    key: 'contact-key',
                     surname: null,
                     user_account: null,
                     bbm_pin: null,
@@ -55,7 +55,7 @@ describe("On MAMA USSD line", function() {
                 api._handle_contacts_get_or_create = function(cmd, reply) {
                     var reply_contact = false;
                     for (var contact_key in api._dummy_contacts){
-                        if (api._dummy_contacts[contact_key][msisdn] == cmd.addr){
+                        if (api._dummy_contacts[contact_key].msisdn == cmd.addr){
                             reply_contact = api._dummy_contacts[contact_key];
                         }
                     }
@@ -502,7 +502,7 @@ describe("On MAMA USSD line", function() {
                     }
                 };
                 api._new_contact = {
-                    key: 'contact_key',
+                    key: 'contact-key',
                     surname: null,
                     user_account: null,
                     bbm_pin: null,
@@ -520,7 +520,7 @@ describe("On MAMA USSD line", function() {
                 api._handle_contacts_get_or_create = function(cmd, reply) {
                     var reply_contact = false;
                     for (var contact_key in api._dummy_contacts){
-                        if (api._dummy_contacts[contact_key][msisdn] == cmd.addr){
+                        if (api._dummy_contacts[contact_key].msisdn == cmd.addr){
                             reply_contact = api._dummy_contacts[contact_key];
                         }
                     }
