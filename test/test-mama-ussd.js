@@ -517,7 +517,14 @@ describe("On MAMA USSD line", function() {
                         facebook_id: null,
                         twitter_handle: null,
                         email_address: null,
-                        name: "Rodney"
+                        name: "Rodney",
+                        extras: {
+                            mama_registration_completed: true,
+                            mama_status: "pregnant",
+                            mama_child_dob: "2013-1",
+                            mama_optin_hiv: true,
+                            mama_optin_sms: true
+                        }
                     }
                 };
                 api._new_contact = {
@@ -579,227 +586,42 @@ describe("On MAMA USSD line", function() {
             async: true
         });
 
-        it.skip("test users - should be prompted for baby/no-baby state", function (done) {
+        it("should start quiz week 5", function (done) {
             var p = tester.check_state({
                 user: null,
                 content: null,
                 next_state: "initial_state",
-                response: "^Welcome to MAMA. To give U the best information possible we need to " +
-                "ask U a few questions. Are U pregnant, or do U have a baby\\?[^]" +
-                "1. Pregnant[^]"+
-                "2. Baby[^]" +
-                "3. Start quiz$"
+                response: "^Congrats on your pregnancy! What kind of foods should you eat now\\?[^]" +
+                "1. Fruit and vegetables[^]"+
+                "2. Chips and soda$"
             });
             p.then(done, done);
         });
 
-        // it("test users - quiz access - should be prompted for baby/no-baby state", function (done) {
-        //     var p = tester.check_state(
-        //         user: null, "3", "quiz_start",
-        //         "^Quiz for pregnant or baby\\?[^]" +
-        //         "1. Pregnant[^]"+
-        //         "2. Baby$"
-        //         );
-        // });
+        it("gets quiz question right", function (done) {
+            var p = tester.check_state({
+                user: null,
+                content: "1",
+                next_state: "prebirth_5_q_1_a_1",
+                response: "^Yes! It's time to eat plenty of healthy fruits and vegetables to" +
+                " nourish your growing baby.[^]" +
+                "1. Next$"
+            });
+            p.then(done, done);
+        });
 
-        // it("test users - quiz access - enter week", function (done) {
-        //     var user = {
-        //         current_state: 'quiz_start',
-        //         answers: {
-        //             initial_state: 'quiz_start'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '1',
-        //         "quiz_start_week",
-        //         "^What week\\?[^]" +
-        //         "1. 5[^]"+
-        //         "2. 6$");
-        // });
-
-        // it("test users - quiz access - prebirth week 5", function (done) {
-        //     var user = {
-        //         current_state: 'quiz_start_week',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'prebirth'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '1',
-        //         "prebirth_5_q_1",
-        //         "^Congrats on your pregnancy! What kind of foods should you eat now\\?[^]" +
-        //         "1. Fruit and vegetables[^]"+
-        //         "2. Chips and soda$");
-        // });
-
-        // it("test users - quiz access - prebirth week 5 - answer correct", function (done) {
-        //     var user = {
-        //         current_state: 'prebirth_5_q_1',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'prebirth',
-        //             quiz_start_week: '5'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '1',
-        //         "prebirth_5_q_1_a_1",
-        //         "^Yes! It's time to eat plenty of healthy fruits and vegetables to " +
-        //         "nourish your growing baby.[^]" +
-        //         "1. Next$");
-        // });
-
-        // it("test users - quiz access - prebirth week 5 - answer wrong", function (done) {
-        //     var user = {
-        //         current_state: 'prebirth_5_q_1',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'prebirth',
-        //             quiz_start_week: '5'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '2',
-        //         "prebirth_5_q_1_a_2",
-        //         "^No - try to avoid junk food that is high in fat & sugar. Now is " +
-        //         "the time to eat plenty of healthy fruits and vegetables to nourish " +
-        //         "your growing baby.[^]" +
-        //         "1. Next$");
-        // });
-
-        // it("test users - quiz access - postbirth week 6", function (done) {
-        //     var user = {
-        //         current_state: 'quiz_start_week',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'postbirth'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '2',
-        //         "postbirth_6_q_1",
-        //         "^Is it common for new mothers to feel sad\\?[^]" +
-        //         "1. It is normal and you can call someone for support[^]"+
-        //         "2. No - only weak people feel sad$");
-        // });
-
-        // it("test users - quiz access - postbirth week 5 - answer correct", function (done) {
-        //     var user = {
-        //         current_state: 'postbirth_6_q_1',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'postbirth',
-        //             quiz_start_week: '6'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '1',
-        //         "postbirth_6_q_1_a_1",
-        //         "^Correct - feeling sad\\? Not enjoying anything\\? This is common in " +
-        //         "new moms. Call[^]" +
-        //         "1. Next$");
-        // });
-
-        // it("test users - quiz access - postbirth week 6 - answer wrong", function (done) {
-        //     var user = {
-        //         current_state: 'postbirth_6_q_1',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'postbirth',
-        //             quiz_start_week: '6'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '2',
-        //         "postbirth_6_q_1_a_2",
-        //         "^Incorrect! Feeling sad\\? Not enjoying anything\\? This is common " +
-        //         "in new moms. Call 0117281347 or talk to a health worker about " +
-        //         "this; you may be depressed.[^]" +
-        //         "1. Next$");
-        // });
-
-        // it("test users - quiz access - postbirth week 6 - Q2", function (done) {
-        //     var user = {
-        //         current_state: 'postbirth_6_q_1_a_1',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'postbirth',
-        //             quiz_start_week: '6',
-        //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '1',
-        //         "postbirth_6_q_2",
-        //         "^How do you know your baby is drinking from your breast properly\\?[^]" +
-        //         "1. He needs a mouthful of breast[^]"+
-        //         "2. It's OK if he just attaches to the nipple$");
-        // });
-
-        // it("test users - quiz access - postbirth week 6 - Q2 - answer correct", function (done) {
-        //     var user = {
-        //         current_state: 'postbirth_6_q_2',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'postbirth',
-        //             quiz_start_week: '6',
-        //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '1',
-        //         "postbirth_6_q_2_a_1",
-        //         "^Yes! Baby needs a good mouthful of breast & to squeeze it to get " +
-        //         "milk. If his mouth is wide open & muscles by his ear move, he's " +
-        //         "attached right.[^]" +
-        //         "1. Next$");
-        // });
-
-        // it("test users - quiz access - postbirth week 6 - Q2 - answer wrong", function (done) {
-        //     var user = {
-        //         current_state: 'postbirth_6_q_2',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'postbirth',
-        //             quiz_start_week: '6',
-        //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '2',
-        //         "postbirth_6_q_2_a_2",
-        //         "^No! Baby needs a good mouthful of breast & to squeeze it to get milk. " +
-        //         "If his mouth is wide open & muscles by his ear move, he's attached right.[^]" +
-        //         "1. Next$");
-        // });
-
-        // it("test users - quiz access - postbirth week 6 - end", function (done) {
-        //     var user = {
-        //         current_state: 'postbirth_6_q_2_a_2',
-        //         answers: {
-        //             initial_state: 'quiz_start',
-        //             quiz_start: 'postbirth',
-        //             quiz_start_week: '6',
-        //             postbirth_6_q_1: 'postbirth_6_q_1_a_1'
-        //         }
-        //     };
-        //     var p = tester.check_state(
-        //         user: user,
-        //         '1',
-        //         "postbirth_6_end",
-        //         "^Thanks! Goodbye!$");
-        // });
+        it("gets quiz question wrong", function (done) {
+            var p = tester.check_state({
+                user: null,
+                content: "2",
+                next_state: "prebirth_5_q_1_a_2",
+                response: "^No - try to avoid junk food that is high in fat & " +
+                "sugar. Now is the time to eat plenty of healthy fruits and " +
+                "vegetables to nourish your growing baby.[^]" +
+                "1. Next$"
+            });
+            p.then(done, done);
+        });
 
     });
 });
