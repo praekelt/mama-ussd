@@ -500,7 +500,9 @@ describe("On MAMA USSD line", function() {
         var tester = new vumigo.test_utils.ImTester(app.api, {
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
-                    quiz_data: JSON.parse(fs.readFileSync("fixtures/quiz-content.json"))
+                    quiz_data: JSON.parse(fs.readFileSync("fixtures/mama-ussd-quiz.json")),
+                    testing: true,
+                    testing_mock_today: [2013,4,8]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -523,7 +525,7 @@ describe("On MAMA USSD line", function() {
                         extras: {
                             mama_registration_completed: true,
                             mama_status: "pregnant",
-                            mama_child_dob: "2013-1",
+                            mama_child_dob: "2014-1",
                             mama_optin_hiv: true,
                             mama_optin_sms: true
                         }
