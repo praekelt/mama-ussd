@@ -30,7 +30,9 @@ describe("On MAMA USSD line", function() {
         var tester = new vumigo.test_utils.ImTester(app.api, {
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
-                    quiz_data: JSON.parse(fs.readFileSync("fixtures/quiz-content.json"))
+                    quiz_data: JSON.parse(fs.readFileSync("fixtures/mama-ussd-quiz.json")),
+                    testing: true,
+                    testing_mock_today: [2013,4,8]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -85,7 +87,7 @@ describe("On MAMA USSD line", function() {
                 };
 
                 api._handle_contacts_update_extras = function(cmd, reply) {
-                    api._dummy_contacts[cmd.key]['extras'] = cmd.fields;
+                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras'][k] = cmd.fields[k]; }
                     reply({
                         success: true,
                         contact: api._dummy_contacts[cmd.key]
@@ -325,7 +327,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_smsoptin',
                 answers: {
                     initial_state: 'baby',
-                    register_prebirth_2: '1',
+                    register_postbirth_2: '5',
                     register_all_hivinfo: 'yes'
                 }
             };
@@ -367,7 +369,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_thanksandstart',
                 answers: {
                     initial_state: 'baby',
-                    register_prebirth_2: '1',
+                    register_postbirth_2: '5',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
                 }
@@ -409,7 +411,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_thanksandstart',
                 answers: {
                     initial_state: 'baby',
-                    register_prebirth_2: '1',
+                    register_postbirth_2: '5',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
                 }
@@ -452,7 +454,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'prebirth_5_q_1',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '1',
+                    register_postbirth_2: '5',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes',
                     quiz_start: 'prebirth_5_q_1'
