@@ -85,9 +85,9 @@ describe("On MAMA USSD line", function() {
                         contact: api._dummy_contacts[cmd.key]
                     });
                 };
-
+                // TODO: This will break when contacts api gets changed to newer format
                 api._handle_contacts_update_extras = function(cmd, reply) {
-                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras'][k] = cmd.fields[k]; }
+                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k]; }
                     reply({
                         success: true,
                         contact: api._dummy_contacts[cmd.key]
@@ -522,14 +522,12 @@ describe("On MAMA USSD line", function() {
                         twitter_handle: null,
                         email_address: null,
                         name: "Rodney",
-                        extras: {
-                            mama_registration_completed: true,
-                            mama_status: "pregnant",
-                            mama_child_dob: "2014-1",
-                            mama_optin_hiv: true,
-                            mama_optin_sms: true,
-                            mama_completed_quizzes: ["prebirth_4"]
-                        }
+                        "extras-mama_registration_completed": true,
+                        "extras-mama_status": "pregnant",
+                        "extras-mama_child_dob": "2014-1",
+                        "extras-mama_optin_hiv": true,
+                        "extras-mama_optin_sms": true,
+                        "extras-mama_completed_quizzes": ["prebirth_4"]
                     }
                 };
                 api._new_contact = {
@@ -580,8 +578,9 @@ describe("On MAMA USSD line", function() {
                     });
                 };
 
+                // TODO: This will break when contacts api gets changed to newer format
                 api._handle_contacts_update_extras = function(cmd, reply) {
-                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras'][k] = cmd.fields[k]; }
+                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k]; }
                     reply({
                         success: true,
                         contact: api._dummy_contacts[cmd.key]
