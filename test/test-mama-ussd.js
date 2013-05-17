@@ -527,7 +527,8 @@ describe("On MAMA USSD line", function() {
                             mama_status: "pregnant",
                             mama_child_dob: "2014-1",
                             mama_optin_hiv: true,
-                            mama_optin_sms: true
+                            mama_optin_sms: true,
+                            mama_completed_quizzes: ["prebirth_4"]
                         }
                     }
                 };
@@ -580,7 +581,7 @@ describe("On MAMA USSD line", function() {
                 };
 
                 api._handle_contacts_update_extras = function(cmd, reply) {
-                    api._dummy_contacts[cmd.key]['extras'] = cmd.fields;
+                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras'][k] = cmd.fields[k]; }
                     reply({
                         success: true,
                         contact: api._dummy_contacts[cmd.key]
@@ -623,6 +624,152 @@ describe("On MAMA USSD line", function() {
                 "sugar. Now is the time to eat plenty of healthy fruits and " +
                 "vegetables to nourish your growing baby.[^]" +
                 "1. Next$"
+            });
+            p.then(done, done);
+        });
+
+        it("gets quiz question 2", function (done) {
+            var user = {
+                current_state: 'prebirth_5_q_1_a_1',
+                answers: {
+                    initial_state: '1'
+                }
+            };
+            var p = tester.check_state({
+                user: user,
+                content: "1",
+                next_state: "prebirth_5_q_2",
+                response: "^Is it important to know your HIV status when " +
+                "you're pregnant\\?[^]" +
+                "1. Yes, very important[^]" +
+                "2. No, it doesn't matter$"
+            });
+            p.then(done, done);
+        });
+
+        it("gets quiz question 2 right", function (done) {
+            var user = {
+                current_state: 'prebirth_5_q_2',
+                answers: {
+                    initial_state: '1',
+                    prebirth_5_q_1: 'prebirth_5_q_1_a_1'
+                }
+            };
+            var p = tester.check_state({
+                user: user,
+                content: "1",
+                next_state: "prebirth_5_q_2_a_1",
+                response: "^Yes! Knowing your HIV status is very important " +
+                "in pregnancy. You can help to keep your baby HIV negative.[^]" +
+                "1. Next$"
+            });
+            p.then(done, done);
+        });
+
+        it("gets quiz question 2 wrong", function (done) {
+            var user = {
+                current_state: 'prebirth_5_q_2',
+                answers: {
+                    initial_state: '1',
+                    prebirth_5_q_1: 'prebirth_5_q_1_a_1'
+                }
+            };
+            var p = tester.check_state({
+                user: user,
+                content: "2",
+                next_state: "prebirth_5_q_2_a_2",
+                response: "^No - knowing your HIV status really does matter " +
+                "in pregnancy. You can help to keep your baby HIV negative.[^]" +
+                "1. Next$"
+            });
+            p.then(done, done);
+        });
+
+        it("gets quiz question 3", function (done) {
+            var user = {
+                current_state: 'prebirth_5_q_2_a_1',
+                answers: {
+                    initial_state: '1',
+                    prebirth_5_q_1: 'prebirth_5_q_1_a_1',
+                    prebirth_5_q_1_a_1: 'prebirth_5_q_2',
+                    prebirth_5_q_2: 'prebirth_5_q_2_a_1'
+                }
+            };
+            var p = tester.check_state({
+                user: user,
+                content: "1",
+                next_state: "prebirth_5_q_3",
+                response: "^How big is your baby right now\\?[^]" +
+                "1. The size of a small bean[^]" +
+                "2. The size of a lemon$"
+            });
+            p.then(done, done);
+        });
+
+        it("gets quiz question 3 right", function (done) {
+            var user = {
+                current_state: 'prebirth_5_q_3',
+                answers: {
+                    initial_state: '1',
+                    prebirth_5_q_1: 'prebirth_5_q_1_a_1',
+                    prebirth_5_q_1_a_1: 'prebirth_5_q_2',
+                    prebirth_5_q_2: 'prebirth_5_q_2_a_1',
+                    prebirth_5_q_2_a_1: 'prebirth_5_q_3'
+                }
+            };
+            var p = tester.check_state({
+                user: user,
+                content: "1",
+                next_state: "prebirth_5_q_3_a_1",
+                response: "^Yes - your baby is only just the size of a very " +
+                "small bean, but he already has tiny hands and feet. His heart " +
+                "is beating twice as fast as yours.[^]" +
+                "1. Next$"
+            });
+            p.then(done, done);
+        });
+
+        it("gets quiz question 3 wrong", function (done) {
+            var user = {
+                current_state: 'prebirth_5_q_3',
+                answers: {
+                    initial_state: '1',
+                    prebirth_5_q_1: 'prebirth_5_q_1_a_1',
+                    prebirth_5_q_1_a_1: 'prebirth_5_q_2',
+                    prebirth_5_q_2: 'prebirth_5_q_2_a_1',
+                    prebirth_5_q_2_a_1: 'prebirth_5_q_3'
+                }
+            };
+            var p = tester.check_state({
+                user: user,
+                content: "2",
+                next_state: "prebirth_5_q_3_a_2",
+                response: "^No - your baby is only just the size of a very " +
+                "small bean, but he already has tiny hands and feet. His heart " +
+                "is beating twice as fast as yours.[^]" +
+                "1. Next$"
+            });
+            p.then(done, done);
+        });
+
+        it("gets quiz end state", function (done) {
+            var user = {
+                current_state: 'prebirth_5_q_3_a_1',
+                answers: {
+                    initial_state: '1',
+                    prebirth_5_q_1: 'prebirth_5_q_1_a_1',
+                    prebirth_5_q_1_a_1: 'prebirth_5_q_2',
+                    prebirth_5_q_2: 'prebirth_5_q_2_a_1',
+                    prebirth_5_q_2_a_1: 'prebirth_5_q_3',
+                    prebirth_5_q_3: 'prebirth_5_q_3_a_2'
+                }
+            };
+            var p = tester.check_state({
+                user: user,
+                content: "1",
+                next_state: "prebirth_5_end",
+                response: "^Thanks! Goodbye!$",
+                continue_session: false
             });
             p.then(done, done);
         });
