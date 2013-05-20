@@ -1,0 +1,231 @@
+{
+  "prebirth_5": {
+    "start": "q_1",
+    "end": "Thanks! Goodbye!",
+    "quiz_details": {
+      "answers": {
+        "q_3_a_1": {
+          "response": "Yes - your baby is only just the size of a very small bean, but he already has tiny hands and feet. His heart is beating twice as fast as yours.",
+          "next": "end"
+        },
+        "q_1_a_2": {
+          "response": "No - try to avoid junk food that is high in fat & sugar. Now is the time to eat plenty of healthy fruits and vegetables to nourish your growing baby.",
+          "next": "q_2"
+        },
+        "q_1_a_1": {
+          "response": "Yes! It's time to eat plenty of healthy fruits and vegetables to nourish your growing baby.",
+          "next": "q_2"
+        },
+        "q_3_a_2": {
+          "response": "No - your baby is only just the size of a very small bean, but he already has tiny hands and feet. His heart is beating twice as fast as yours.",
+          "next": "end"
+        },
+        "q_2_a_1": {
+          "response": "Yes! Knowing your HIV status is very important in pregnancy. You can help to keep your baby HIV negative.",
+          "next": "q_3"
+        },
+        "q_2_a_2": {
+          "response": "No - knowing your HIV status really does matter in pregnancy. You can help to keep your baby HIV negative.",
+          "next": "q_3"
+        }
+      },
+      "questions": {
+        "q_3": {
+          "question": "How big is your baby right now?",
+          "choices": [
+            [
+              "q_3_a_1",
+              "The size of a small bean"
+            ],
+            [
+              "q_3_a_2",
+              "The size of a lemon"
+            ]
+          ]
+        },
+        "q_2": {
+          "question": "Is it important to know your HIV status when you're pregnant?",
+          "choices": [
+            [
+              "q_2_a_1",
+              "Yes, very important"
+            ],
+            [
+              "q_2_a_2",
+              "No, it doesn't matter"
+            ]
+          ]
+        },
+        "q_1": {
+          "question": "Congrats on your pregnancy! What kind of foods should you eat now?",
+          "choices": [
+            [
+              "q_1_a_1",
+              "Fruit and vegetables"
+            ],
+            [
+              "q_1_a_2",
+              "Chips and soda"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "prebirth_6": {
+    "start": "q_1",
+    "end": "Thanks! Goodbye!",
+    "quiz_details": {
+      "answers": {
+        "q_1_a_2": {
+          "response": "No - you are not alone. Speak to a sister or social worker at the clinic or a friend, or call Marie Stopes on 0800 117 785.",
+          "next": "q_2"
+        },
+        "q_1_a_1": {
+          "response": "Yes - you can speak to a sister or social worker at the clinic, a friend, or call Marie Stopes on 0800 117 785.",
+          "next": "q_2"
+        },
+        "q_2_a_2": {
+          "response": "No - your baby needs chicken, red meat, fruit & vegetables (especially green ones) to keep healthy and grow.",
+          "next": "end"
+        },
+        "q_2_a_1": {
+          "response": "Yes - eat lots of chicken, red meat, fruit & vegetables (especially green ones) to help keep you & your baby well.",
+          "next": "end"
+        }
+      },
+      "questions": {
+        "q_2": {
+          "question": "What should you eat to keep you and your baby healthy?",
+          "choices": [
+            [
+              "q_2_a_1",
+              "Eat meat, fruits and vegetables"
+            ],
+            [
+              "q_2_a_2",
+              "Eat junk food"
+            ]
+          ]
+        },
+        "q_1": {
+          "question": "What if you are worried you won't cope with a baby?",
+          "choices": [
+            [
+              "q_1_a_1",
+              "You can speak to someone"
+            ],
+            [
+              "q_1_a_2",
+              "You should keep it to yourself"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "postbirth_5": {
+        "start": "q_1",
+        "end": "Thanks! Goodbye!",
+        "quiz_details": {
+            "answers": {
+                "q_1_a_2": {
+                    "response": "Incorrect - your baby needs to be registered before he is 30 days old. Do this at Home Affairs. Then you can apply for the child grant at SASSA.",
+                    "next": "q_2"
+                },
+                "q_1_a_1": {
+                    "response": "Correct - your baby needs to be registered before he is 30 days old. Do this at Home Affairs. Then you can apply for the child grant at SASSA.",
+                    "next": "q_2"
+                },
+                "q_2_a_2": {
+                    "response": "Correct - baby's tummy, hands & feet should be warm (not hot, cold or blue). His eyes & skin shouldn't be yellow. For any of these, visit the",
+                    "next": "end"
+                },
+                "q_2_a_1": {
+                    "response": "Incorrect - baby's tummy, hands & feet should be warm (not hot, cold or blue). His eyes & skin shouldn't be yellow. For any of these, visit the",
+                    "next": "end"
+                }
+            },
+            "questions": {
+                "q_2": {
+                    "question": "Is it okay if your baby's body is cold, or his eyes are yellow?",
+                    "choices": [
+                        [
+                            "q_2_a_1",
+                            "Yes"
+                        ],
+                        [
+                            "q_2_a_2",
+                            "No"
+                        ]
+                    ]
+                },
+                "q_1": {
+                    "question": "When does your baby's birth need to be registered with Home Affairs?",
+                    "choices": [
+                        [
+                            "q_1_a_1",
+                            "Within 30 days of birth"
+                        ],
+                        [
+                            "q_1_a_2",
+                            "Within 3 months"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "postbirth_6": {
+        "start": "q_1",
+        "end": "Thanks! Goodbye!",
+        "quiz_details": {
+            "answers": {
+                "q_1_a_2": {
+                    "response": "Incorrect! Feeling sad? Not enjoying anything? This is common in new moms. Call 0117281347 or talk to a health worker about this; you may be depressed.",
+                    "next": "q_2"
+                },
+                "q_1_a_1": {
+                    "response": "Correct - feeling sad? Not enjoying anything? This is common in new moms. Call",
+                    "next": "q_2"
+                },
+                "q_2_a_2": {
+                    "response": "No! Baby needs a good mouthful of breast & to squeeze it to get milk. If his mouth is wide open & muscles by his ear move, he's attached right.",
+                    "next": "end"
+                },
+                "q_2_a_1": {
+                    "response": "Yes! Baby needs a good mouthful of breast & to squeeze it to get milk. If his mouth is wide open & muscles by his ear move, he's attached right.",
+                    "next": "end"
+                }
+            },
+            "questions": {
+                "q_2": {
+                    "question": "How do you know your baby is drinking from your breast properly?",
+                    "choices": [
+                        [
+                            "q_2_a_1",
+                            "He needs a mouthful of breast"
+                        ],
+                        [
+                            "q_2_a_2",
+                            "It's OK if he just attaches to the nipple"
+                        ]
+                    ]
+                },
+                "q_1": {
+                    "question": "Is it common for new mothers to feel sad?",
+                    "choices": [
+                        [
+                            "q_1_a_1",
+                            "It is normal and you can call someone for support"
+                        ],
+                        [
+                            "q_1_a_2",
+                            "No - only weak people feel sad"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}
