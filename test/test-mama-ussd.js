@@ -522,11 +522,11 @@ describe("On MAMA USSD line", function() {
                         twitter_handle: null,
                         email_address: null,
                         name: "Rodney",
-                        "extras-mama_registration_completed": true,
+                        "extras-mama_registration_completed": "yes",
                         "extras-mama_status": "pregnant",
                         "extras-mama_child_dob": "2014-1",
-                        "extras-mama_optin_hiv": true,
-                        "extras-mama_optin_sms": true,
+                        "extras-mama_optin_hiv": "yes",
+                        "extras-mama_optin_sms": "yes",
                         "extras-mama_completed_quizzes": ["prebirth_4"]
                     }
                 };
