@@ -23,3 +23,5 @@ This application provides registration for new users and quiz content for return
 Though if you want a beautiful test output (includes nicely grouped test names etc.) that runs against the codebase:
 
     $ ./node_modules/.bin/mocha -R spec --watch
+
+[![Build Status](https://travis-ci.org/praekelt/mama-ussd.png?branch=develop)](https://travis-ci.org/praekelt/mama-ussd)
