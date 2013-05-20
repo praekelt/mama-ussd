@@ -17,7 +17,7 @@ describe("test api", function() {
     });
 });
 
-
+var quiz_file = process.env.MAMA_QUIZ_FILE || "fixtures/quiz-content.json";
 
 describe("On MAMA USSD line", function() {
 
@@ -30,7 +30,7 @@ describe("On MAMA USSD line", function() {
         var tester = new vumigo.test_utils.ImTester(app.api, {
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
-                    quiz_data: JSON.parse(fs.readFileSync("fixtures/mama-ussd-quiz.json")),
+                    quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
                     testing_mock_today: [2013,4,8]
                 });
