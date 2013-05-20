@@ -150,19 +150,16 @@ describe("On MAMA USSD line", function() {
                 content: "1",
                 next_state: "register_prebirth_2",
                 response: "^In what month is your baby due\\?[^]" +
-                "1. Jan[^]"+
-                "2. Feb[^]" +
-                "3. March[^]" +
-                "4. April[^]" +
-                "5. May[^]" +
-                "6. June[^]" +
-                "7. July[^]" +
-                "8. Aug[^]" +
-                "9. Sept[^]" +
-                "10. Oct[^]" +
-                "11. Nov[^]" +
-                "12. Dec[^]" +
-                "13. Don't Know$"
+                "1. May[^]" +
+                "2. June[^]" +
+                "3. July[^]" +
+                "4. Aug[^]" +
+                "5. Sept[^]" +
+                "6. Oct[^]" +
+                "7. Nov[^]" +
+                "8. Dec[^]" +
+                "9. Jan[^]" +
+                "10. Don't Know$"
             });
             p.then(done, done);
         });
@@ -176,7 +173,7 @@ describe("On MAMA USSD line", function() {
             };
             var p = tester.check_state({
                 user: user,
-                content: '13',
+                content: '10',
                 next_state: "register_prebirth_2_endstate",
                 response: "^To sign up, we need to know which month. Please go to the clinic to " +
                 "find out, and dial us again.$",
@@ -228,7 +225,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_prebirth_2',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '1'
+                    register_prebirth_2: '9'
                 }
             };
             var p = tester.check_state({
@@ -266,7 +263,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_hivinfo',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '1'
+                    register_prebirth_2: '9'
                 }
             };
             var p = tester.check_state({
@@ -306,7 +303,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_smsoptin',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '1',
+                    register_prebirth_2: '9',
                     register_all_hivinfo: 'yes'
                 }
             };
@@ -348,7 +345,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_thanksandstart',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '1',
+                    register_prebirth_2: '9',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
                 }
@@ -390,7 +387,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_thanksandstart',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '1',
+                    register_prebirth_2: '9',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
                 }
@@ -432,7 +429,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'prebirth_5_q_1',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '1',
+                    register_prebirth_2: '9',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes',
                     quiz_start: 'prebirth_5_q_1'
