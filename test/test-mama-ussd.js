@@ -527,7 +527,7 @@ describe("On MAMA USSD line", function() {
                         "extras-mama_child_dob": "2014-1",
                         "extras-mama_optin_hiv": "yes",
                         "extras-mama_optin_sms": "yes",
-                        "extras-mama_completed_quizzes": ["prebirth_4"]
+                        "extras-mama_completed_quizzes": '["prebirth_4"]'
                     }
                 };
                 api._new_contact = {
