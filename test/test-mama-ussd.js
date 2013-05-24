@@ -519,7 +519,7 @@ describe("On MAMA USSD line", function() {
                         twitter_handle: null,
                         email_address: null,
                         name: "Rodney",
-                        "extras-mama_registered": "'2013-05-24T08:27:01.209Z'",
+                        "extras-mama_registered": "2013-05-24T08:27:01.209Z",
                         "extras-mama_status": "pregnant",
                         "extras-mama_child_dob": "2014-1",
                         "extras-mama_optin_hiv": "yes",
