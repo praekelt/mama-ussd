@@ -520,11 +520,14 @@ describe("On MAMA USSD line", function() {
                         email_address: null,
                         name: "Rodney",
                         "extras-mama_registered": "2013-05-24T08:27:01.209Z",
+                        "extras-mama_total_signins": 0,
                         "extras-mama_status": "pregnant",
                         "extras-mama_child_dob": "2014-1",
                         "extras-mama_optin_hiv": "yes",
                         "extras-mama_optin_sms": "yes",
-                        "extras-mama_completed_quizzes": '["prebirth_4"]'
+                        "extras-mama_completed_quizzes": '["prebirth_4"]',
+                        "extras-mama_cohort_group": "initial",
+                        "extras-mama_cohort_group_history": '["initial"]'
                     }
                 };
                 api._new_contact = {
