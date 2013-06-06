@@ -519,12 +519,15 @@ describe("On MAMA USSD line", function() {
                         twitter_handle: null,
                         email_address: null,
                         name: "Rodney",
-                        "extras-mama_registration_completed": "yes",
+                        "extras-mama_registered": "2013-05-24T08:27:01.209Z",
+                        "extras-mama_total_signins": 0,
                         "extras-mama_status": "pregnant",
                         "extras-mama_child_dob": "2014-1",
                         "extras-mama_optin_hiv": "yes",
                         "extras-mama_optin_sms": "yes",
-                        "extras-mama_completed_quizzes": '["prebirth_4"]'
+                        "extras-mama_completed_quizzes": '["prebirth_4"]',
+                        "extras-mama_cohort_group": "initial",
+                        "extras-mama_cohort_group_history": '["initial"]'
                     }
                 };
                 api._new_contact = {
@@ -768,6 +771,42 @@ describe("On MAMA USSD line", function() {
                 continue_session: false
             });
             p.then(done, done);
+        });
+
+        it("gives a correct cohort check as initial", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,4,1,8,0,0); // 1st May
+            var signup = "2013-05-01T08:27:01.209Z";
+            var dates = [];
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "initial");
+        });
+
+        it("gives a correct cohort check as deactive", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,5,2,8,0,0); // 2nd June
+            var signup = "2013-05-01T08:27:01.209Z";
+            var dates = []; // No sign-ins
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "deactive");
+        });
+
+        it("gives a correct cohort check as active", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,5,2,8,0,0); // 2nd June
+            var signup = "2013-05-01T08:27:01.209Z";
+            var dates = ["2013-05-11T08:27:01.209Z", "2013-05-19T08:27:01.209Z"];
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "active");
+        });
+
+        it("gives a correct cohort check as embedded", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,4,24,18,0,0); // 24th May
+            var signup = "2013-04-25T08:23:01.209Z";
+            var dates = ["2013-04-25T08:27:01.209Z", "2013-04-31T08:27:01.209Z", "2013-05-06T08:27:01.209Z", "2013-05-13T08:27:01.209Z", "2013-05-20T08:27:01.209Z", "2013-05-24T08:27:01.209Z"];
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "embedded");
         });
 
     });
