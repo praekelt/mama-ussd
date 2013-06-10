@@ -32,7 +32,7 @@ describe("On MAMA USSD line", function() {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8]
+                    testing_mock_today: [2013,4,8,11,11]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -514,7 +514,7 @@ describe("On MAMA USSD line", function() {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8]
+                    testing_mock_today: [2013,4,8,11,11]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -616,7 +616,7 @@ describe("On MAMA USSD line", function() {
             });
             p.then(function() {
                 var metrics_store = app.api.metrics['mama-metrics'];
-                var metric = metrics_store['2013-04-22_initial'];
+                var metric = metrics_store['2013-05-06_initial'];
                 assert.equal(metric.agg, 'max');
                 assert.deepEqual(metric.values, [1]);
             }).then(done, done);
