@@ -110,7 +110,12 @@ describe("On MAMA USSD line", function() {
                 "2. Baby[^]" +
                 "3. Don't know$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-visitors'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("unknown, should get pre-exit message", function (done) {
@@ -316,7 +321,12 @@ describe("On MAMA USSD line", function() {
                 "1. Yes[^]"+
                 "2. No$"
             });
-             p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-signups'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("postbirth, should be thanked and asked if want quiz", function (done) {
@@ -337,7 +347,12 @@ describe("On MAMA USSD line", function() {
                 "1. Yes[^]"+
                 "2. No$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-signups'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("prebirth, should if not opting for quiz now, thank and exit", function (done) {
@@ -599,7 +614,12 @@ describe("On MAMA USSD line", function() {
                 "1. Fruit and vegetables[^]"+
                 "2. Chips and soda$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['2013-04-22_initial'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("gets quiz question right", function (done) {
