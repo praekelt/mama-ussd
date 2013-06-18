@@ -32,7 +32,7 @@ describe("On MAMA USSD line", function() {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8]
+                    testing_mock_today: [2013,4,8,11,11]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -87,9 +87,17 @@ describe("On MAMA USSD line", function() {
                 };
                 // TODO: This will break when contacts api gets changed to newer format
                 api._handle_contacts_update_extras = function(cmd, reply) {
-                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k]; }
+                    var success = true;
+                    for (var k in cmd.fields) {
+                        if (typeof cmd.fields[k]!="string"){  // This is always string ATM
+                            success = false;
+                            break;
+                        } else {
+                            api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k];
+                        }
+                    }
                     reply({
-                        success: true,
+                        success: success,
                         contact: api._dummy_contacts[cmd.key]
                     });
                 };
@@ -110,7 +118,12 @@ describe("On MAMA USSD line", function() {
                 "2. Baby[^]" +
                 "3. Don't know$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-visitors'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("unknown, should get pre-exit message", function (done) {
@@ -316,7 +329,12 @@ describe("On MAMA USSD line", function() {
                 "1. Yes[^]"+
                 "2. No$"
             });
-             p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-signups'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("postbirth, should be thanked and asked if want quiz", function (done) {
@@ -337,7 +355,12 @@ describe("On MAMA USSD line", function() {
                 "1. Yes[^]"+
                 "2. No$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-signups'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("prebirth, should if not opting for quiz now, thank and exit", function (done) {
@@ -499,7 +522,7 @@ describe("On MAMA USSD line", function() {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8]
+                    testing_mock_today: [2013,4,8,11,11]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -519,12 +542,15 @@ describe("On MAMA USSD line", function() {
                         twitter_handle: null,
                         email_address: null,
                         name: "Rodney",
-                        "extras-mama_registration_completed": "yes",
+                        "extras-mama_registered": "2013-05-24T08:27:01.209Z",
+                        "extras-mama_total_signins": 0,
                         "extras-mama_status": "pregnant",
                         "extras-mama_child_dob": "2014-1",
                         "extras-mama_optin_hiv": "yes",
                         "extras-mama_optin_sms": "yes",
-                        "extras-mama_completed_quizzes": '["prebirth_4"]'
+                        "extras-mama_completed_quizzes": '["prebirth_4"]',
+                        "extras-mama_cohort_group": "initial",
+                        "extras-mama_cohort_group_history": '["initial"]'
                     }
                 };
                 api._new_contact = {
@@ -596,7 +622,12 @@ describe("On MAMA USSD line", function() {
                 "1. Fruit and vegetables[^]"+
                 "2. Chips and soda$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['2013-05-06_initial'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("gets quiz question right", function (done) {
@@ -768,6 +799,42 @@ describe("On MAMA USSD line", function() {
                 continue_session: false
             });
             p.then(done, done);
+        });
+
+        it("gives a correct cohort check as initial", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,4,1,8,0,0); // 1st May
+            var signup = "2013-05-01T08:27:01.209Z";
+            var dates = [];
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "initial");
+        });
+
+        it("gives a correct cohort check as deactive", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,5,2,8,0,0); // 2nd June
+            var signup = "2013-05-01T08:27:01.209Z";
+            var dates = []; // No sign-ins
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "deactive");
+        });
+
+        it("gives a correct cohort check as active", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,5,2,8,0,0); // 2nd June
+            var signup = "2013-05-01T08:27:01.209Z";
+            var dates = ["2013-05-11T08:27:01.209Z", "2013-05-19T08:27:01.209Z"];
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "active");
+        });
+
+        it("gives a correct cohort check as embedded", function(){
+            var state_creator = app.api.im.state_creator;
+            var today = new Date(2013,4,24,18,0,0); // 24th May
+            var signup = "2013-04-25T08:23:01.209Z";
+            var dates = ["2013-04-25T08:27:01.209Z", "2013-04-31T08:27:01.209Z", "2013-05-06T08:27:01.209Z", "2013-05-13T08:27:01.209Z", "2013-05-20T08:27:01.209Z", "2013-05-24T08:27:01.209Z"];
+            var cohort = state_creator.check_cohort(today, signup, dates);
+            assert.equal(cohort, "embedded");
         });
 
     });
