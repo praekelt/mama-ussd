@@ -87,9 +87,17 @@ describe("On MAMA USSD line", function() {
                 };
                 // TODO: This will break when contacts api gets changed to newer format
                 api._handle_contacts_update_extras = function(cmd, reply) {
-                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k]; }
+                    var success = true;
+                    for (var k in cmd.fields) {
+                        if (typeof cmd.fields[k]!="string"){  // This is always string ATM
+                            success = false;
+                            break;
+                        } else {
+                            api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k];
+                        }
+                    }
                     reply({
-                        success: true,
+                        success: success,
                         contact: api._dummy_contacts[cmd.key]
                     });
                 };
