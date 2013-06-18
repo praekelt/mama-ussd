@@ -32,7 +32,7 @@ describe("On MAMA USSD line", function() {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8]
+                    testing_mock_today: [2013,4,8,11,11]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -87,9 +87,17 @@ describe("On MAMA USSD line", function() {
                 };
                 // TODO: This will break when contacts api gets changed to newer format
                 api._handle_contacts_update_extras = function(cmd, reply) {
-                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k]; }
+                    var success = true;
+                    for (var k in cmd.fields) {
+                        if (typeof cmd.fields[k]!="string"){  // This is always string ATM
+                            success = false;
+                            break;
+                        } else {
+                            api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k];
+                        }
+                    }
                     reply({
-                        success: true,
+                        success: success,
                         contact: api._dummy_contacts[cmd.key]
                     });
                 };
@@ -110,7 +118,12 @@ describe("On MAMA USSD line", function() {
                 "2. Baby[^]" +
                 "3. Don't know$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-visitors'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("unknown, should get pre-exit message", function (done) {
@@ -316,7 +329,12 @@ describe("On MAMA USSD line", function() {
                 "1. Yes[^]"+
                 "2. No$"
             });
-             p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-signups'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("postbirth, should be thanked and asked if want quiz", function (done) {
@@ -337,7 +355,12 @@ describe("On MAMA USSD line", function() {
                 "1. Yes[^]"+
                 "2. No$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['total-signups'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("prebirth, should if not opting for quiz now, thank and exit", function (done) {
@@ -499,7 +522,7 @@ describe("On MAMA USSD line", function() {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8]
+                    testing_mock_today: [2013,4,8,11,11]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -599,7 +622,12 @@ describe("On MAMA USSD line", function() {
                 "1. Fruit and vegetables[^]"+
                 "2. Chips and soda$"
             });
-            p.then(done, done);
+            p.then(function() {
+                var metrics_store = app.api.metrics['mama-metrics'];
+                var metric = metrics_store['2013-05-06_initial'];
+                assert.equal(metric.agg, 'max');
+                assert.deepEqual(metric.values, [1]);
+            }).then(done, done);
         });
 
         it("gets quiz question right", function (done) {
