@@ -33,6 +33,7 @@ describe("On MAMA USSD line", function() {
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
                     testing_mock_today: [2013,4,8,11,11]
+                    // testing_mock_today: [2013,5,21,16,50]
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -316,7 +317,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_smsoptin',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '9',
+                    register_prebirth_2: '1',
                     register_all_hivinfo: 'yes'
                 }
             };
@@ -368,7 +369,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_thanksandstart',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '9',
+                    register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
                 }
@@ -410,7 +411,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'register_all_thanksandstart',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '9',
+                    register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes'
                 }
@@ -452,7 +453,7 @@ describe("On MAMA USSD line", function() {
                 current_state: 'prebirth_5_q_1',
                 answers: {
                     initial_state: 'pregnant',
-                    register_prebirth_2: '9',
+                    register_prebirth_2: '1',
                     register_all_hivinfo: 'yes',
                     register_all_smsoptin: 'yes',
                     quiz_start: 'prebirth_5_q_1'
