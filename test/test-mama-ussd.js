@@ -120,8 +120,8 @@ describe("On MAMA USSD line", function() {
                 "3. Don't know$"
             });
             p.then(function() {
-                var metrics_store = app.api.metrics['mama-metrics'];
-                var metric = metrics_store['total-visitors'];
+                var metrics_store = app.api.metrics['mama_metrics'];
+                var metric = metrics_store['total_visitors'];
                 assert.equal(metric.agg, 'max');
                 assert.deepEqual(metric.values, [1]);
             }).then(done, done);
@@ -331,8 +331,8 @@ describe("On MAMA USSD line", function() {
                 "2. No$"
             });
             p.then(function() {
-                var metrics_store = app.api.metrics['mama-metrics'];
-                var metric = metrics_store['total-signups'];
+                var metrics_store = app.api.metrics['mama_metrics'];
+                var metric = metrics_store['total_signups'];
                 assert.equal(metric.agg, 'max');
                 assert.deepEqual(metric.values, [1]);
             }).then(done, done);
@@ -357,8 +357,8 @@ describe("On MAMA USSD line", function() {
                 "2. No$"
             });
             p.then(function() {
-                var metrics_store = app.api.metrics['mama-metrics'];
-                var metric = metrics_store['total-signups'];
+                var metrics_store = app.api.metrics['mama_metrics'];
+                var metric = metrics_store['total_signups'];
                 assert.equal(metric.agg, 'max');
                 assert.deepEqual(metric.values, [1]);
             }).then(done, done);
@@ -624,7 +624,7 @@ describe("On MAMA USSD line", function() {
                 "2. Chips and soda$"
             });
             p.then(function() {
-                var metrics_store = app.api.metrics['mama-metrics'];
+                var metrics_store = app.api.metrics['mama_metrics'];
                 var metric = metrics_store['2013-05-06_initial'];
                 assert.equal(metric.agg, 'max');
                 assert.deepEqual(metric.values, [1]);
