@@ -21,6 +21,20 @@ var quiz_file = process.env.MAMA_QUIZ_FILE || "fixtures/quiz-content.json";
 
 describe("On MAMA USSD line", function() {
 
+    it('should tell us whether a month is this year or not', function(done) {
+        var state_creator = app.api.im.state_creator;
+        assert.equal(
+            state_creator.is_month_this_year(new Date('2013-08-01'), 10),
+            true);
+        assert.equal(
+            state_creator.is_month_this_year(new Date('2013-08-01'), 8),
+            true);
+        assert.equal(
+            state_creator.is_month_this_year(new Date('2013-08-01'), 7),
+            false);
+        done();
+    });
+
     describe("unregistered users", function() {
 
         // These are used to mock API reponses
