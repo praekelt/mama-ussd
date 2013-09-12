@@ -46,7 +46,20 @@ describe("On MAMA USSD line", function() {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8,11,11]
+                    testing_mock_today: [2013,4,8,11,11],
+                    airtime_active: true,
+                    airtime_max_per_week: 50,
+                    airtime_values: {
+                        "vodacom": 12,
+                        "mtn": 10,
+                        "cellc": 10,
+                        "telkom": 10,
+                        "virgin": 10
+                    },
+                    airtime_chance: 10,
+                    airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
+                        "You should receive airtime automatically soon. Dial *120*2112# " +
+                        "next MAMA Monday, for another chance to win."
                     // testing_mock_today: [2013,5,21,16,50]
                 });
                 fixtures.forEach(function (f) {
