@@ -593,7 +593,7 @@ describe("On MAMA USSD line", function() {
                         surname: "Trotter",
                         user_account: "test-0-user",
                         bbm_pin: null,
-                        msisdn: "1234567",
+                        msisdn: "27845123456",
                         created_at: "2013-04-24 14:01:41.803693",
                         gtalk_id: null,
                         dob: null,
@@ -680,7 +680,9 @@ describe("On MAMA USSD line", function() {
                 next_state: "initial_state",
                 response: "^Congrats on your pregnancy! What kind of foods should you eat now\\?[^]" +
                 "1. Fruit and vegetables[^]"+
-                "2. Chips and soda$"
+                "2. Chips and soda$",
+                from_addr: "27845123456"
+                
             });
             p.then(function() {
                 var metrics_store = app.api.metrics['mama_metrics'];
@@ -697,7 +699,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_1_a_1",
                 response: "^Yes! It's time to eat plenty of healthy fruits and vegetables to" +
                 " nourish your growing baby.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -710,7 +713,8 @@ describe("On MAMA USSD line", function() {
                 response: "^No - try to avoid junk food that is high in fat & " +
                 "sugar. Now is the time to eat plenty of healthy fruits and " +
                 "vegetables to nourish your growing baby.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -729,7 +733,8 @@ describe("On MAMA USSD line", function() {
                 response: "^Is it important to know your HIV status when " +
                 "you're pregnant\\?[^]" +
                 "1. Yes, very important[^]" +
-                "2. No, it doesn't matter$"
+                "2. No, it doesn't matter$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -748,7 +753,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_2_a_1",
                 response: "^Yes! Knowing your HIV status is very important " +
                 "in pregnancy. You can help to keep your baby HIV negative.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -767,7 +773,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_2_a_2",
                 response: "^No - knowing your HIV status really does matter " +
                 "in pregnancy. You can help to keep your baby HIV negative.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -788,7 +795,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_3",
                 response: "^How big is your baby right now\\?[^]" +
                 "1. The size of a small bean[^]" +
-                "2. The size of a lemon$"
+                "2. The size of a lemon$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -811,7 +819,8 @@ describe("On MAMA USSD line", function() {
                 response: "^Yes - your baby is only just the size of a very " +
                 "small bean, but he already has tiny hands and feet. His heart " +
                 "is beating twice as fast as yours.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -834,12 +843,13 @@ describe("On MAMA USSD line", function() {
                 response: "^No - your baby is only just the size of a very " +
                 "small bean, but he already has tiny hands and feet. His heart " +
                 "is beating twice as fast as yours.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
 
-        it.skip("gets quiz end state", function (done) {
+        it("gets quiz end state", function (done) {
             var user = {
                 current_state: 'prebirth_5_q_3_a_1',
                 answers: {
@@ -856,7 +866,8 @@ describe("On MAMA USSD line", function() {
                 content: "1",
                 next_state: "prebirth_5_end",
                 response: "^Thanks! Goodbye!$",
-                continue_session: false
+                continue_session: false,
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -945,7 +956,7 @@ describe("On MAMA USSD line", function() {
         });
 
         it("gives a airtime credit everytime in test mode", function(){
-            app.api.im.addr = "27845123456";
+            //app.api.im.addr = "27845123456";
             var state_creator = app.api.im.state_creator;
             var result = state_creator.run_airtime_giveaway();
             result.add_callback(function(result){
