@@ -50,16 +50,24 @@ describe("On MAMA USSD line", function() {
                     airtime_active: true,
                     airtime_max_per_week: 50,
                     airtime_values: {
-                        "vodacom": 12,
-                        "mtn": 10,
-                        "cellc": 10,
-                        "telkom": 10,
-                        "virgin": 10
+                        "VOD": 1200,
+                        "MTN": 1000,
+                        "CELLC": 1000,
+                        "8TA": 1000,
                     },
                     airtime_chance: 10,
                     airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
                         "You should receive airtime automatically soon. Dial *120*2112# " +
-                        "next MAMA Monday, for another chance to win."
+                        "next MAMA Monday, for another chance to win.",
+                    airtime_hs_url: "http://api.hotsocket.co.za:8080/test/",
+                    airtime_hs_login: ["test", "pass"],
+                    network_mapping: [
+                        ['MTN', ['2783', '2773', '2778', '27710', '27717', '27718', '27719']],
+                        ['VOD',['2782', '2772', '2776', '2779', '27711', '27712', '27713', '27714', '27715', '27716']],
+                        ['CELLC', ['2784','2774']],
+                        ['8TA', ['27811', '27812', '27813', '27814']]
+                    ],
+                    sms_tag: ["mama-ussd", "outbound"],
                     // testing_mock_today: [2013,5,21,16,50]
                 });
                 fixtures.forEach(function (f) {
@@ -544,13 +552,37 @@ describe("On MAMA USSD line", function() {
 
         // These are used to mock API reponses
         // EXAMPLE: Response from google maps API
-        var fixtures = [];
+        var fixtures = [
+            'test/fixtures/hs_login.json',
+            'test/fixtures/hs_recharge.json',
+        ];
         var tester = new vumigo.test_utils.ImTester(app.api, {
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
                     testing: true,
-                    testing_mock_today: [2013,4,8,11,11]
+                    testing_mock_today: [2013,4,8,11,11],
+                    airtime_active: true,
+                    airtime_max_per_week: 50,
+                    airtime_values: {
+                        "VOD": 1200,
+                        "MTN": 1000,
+                        "CELLC": 1000,
+                        "8TA": 1000,
+                    },
+                    airtime_chance: 10,
+                    airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
+                        "You should receive airtime automatically soon. Dial *120*2112# " +
+                        "next MAMA Monday, for another chance to win.",
+                    airtime_hs_url: "http://api.hotsocket.co.za:8080/test/",
+                    airtime_hs_login: ["test", "pass"],
+                    network_mapping: [
+                        ['MTN', ['2783', '2773', '2778', '27710', '27717', '27718', '27719']],
+                        ['VOD',['2782', '2772', '2776', '2779', '27711', '27712', '27713', '27714', '27715', '27716']],
+                        ['CELLC', ['2784','2774']],
+                        ['8TA', ['27811', '27812', '27813', '27814']]
+                    ],
+                    sms_tag: ["mama-ussd", "outbound"],
                 });
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -807,7 +839,7 @@ describe("On MAMA USSD line", function() {
             p.then(done, done);
         });
 
-        it("gets quiz end state", function (done) {
+        it.skip("gets quiz end state", function (done) {
             var user = {
                 current_state: 'prebirth_5_q_3_a_1',
                 answers: {
@@ -865,6 +897,62 @@ describe("On MAMA USSD line", function() {
             assert.equal(cohort, "embedded");
         });
 
+        it("gives a correct network_lookup as Vodacom", function(){
+            var state_creator = app.api.im.state_creator;
+            var msisdn = "27711123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "VOD");
+        });
+
+        it("gives a correct network_lookup as MTN", function(){
+            var state_creator = app.api.im.state_creator;
+            var msisdn = "27719123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "MTN");
+        });
+
+        it("gives a correct network_lookup as Cell C", function(){
+            var state_creator = app.api.im.state_creator;
+            var msisdn = "27845123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "CELLC");
+        });
+
+        it("gives a correct network_lookup as 8ta", function(){
+            var state_creator = app.api.im.state_creator;
+            var msisdn = "27813123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "8TA");
+        });
+
+        it("gives a correct network_lookup as unknown", function(){
+            var state_creator = app.api.im.state_creator;
+            var msisdn = "27993123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "UNKNOWN");
+        });
+
+        it("gives a airtime credit", function(){
+            var state_creator = app.api.im.state_creator;
+            app.api.im.user_addr = "27845123456";
+            var msisdn = "27845123456";
+            var credit = "1000";
+            var network = "CELLC";
+            var result = state_creator.airtime_credit(msisdn, network, credit);
+            result.add_callback(function(result){
+                assert.equal(result.response.status, "0000");
+            });
+        });
+
+        it("gives a airtime credit everytime in test mode", function(){
+            app.api.im.addr = "27845123456";
+            var state_creator = app.api.im.state_creator;
+            var result = state_creator.run_airtime_giveaway();
+            result.add_callback(function(result){
+                assert.equal(result.success, true);
+                assert.equal(result.cmd, 'kv.incr');
+            });
+        });
     });
 });
 
