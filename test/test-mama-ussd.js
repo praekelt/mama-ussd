@@ -18,6 +18,7 @@ describe("test api", function() {
 });
 
 var quiz_file = process.env.MAMA_QUIZ_FILE || "fixtures/quiz-content.json";
+var quiz_data = JSON.parse(fs.readFileSync(quiz_file));
 
 describe("On MAMA USSD line", function() {
 
@@ -41,83 +42,108 @@ describe("On MAMA USSD line", function() {
         // EXAMPLE: Response from google maps API
         var fixtures = [];
 
-        var tester = new vumigo.test_utils.ImTester(app.api, {
-            custom_setup: function (api) {
-                api.config_store.config = JSON.stringify({
-                    quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
-                    testing: true,
-                    testing_mock_today: [2013,4,8,11,11]
-                    // testing_mock_today: [2013,5,21,16,50]
-                });
-                fixtures.forEach(function (f) {
-                    api.load_http_fixture(f);
-                });
-                api._dummy_contacts = {};
-                api._new_contact = {
-                    key: 'contact-key',
-                    surname: null,
-                    user_account: null,
-                    bbm_pin: null,
-                    msisdn: null,
-                    created_at: '2013-04-24 14:01:41.803693',
-                    gtalk_id: null,
-                    dob: null,
-                    groups: [],
-                    facebook_id: null,
-                    twitter_handle: null,
-                    email_address: null,
-                    name: null,
-                    extras: {}
-                };
-                api._handle_contacts_get_or_create = function(cmd, reply) {
-                    var reply_contact = false;
-                    for (var contact_key in api._dummy_contacts){
-                        if (api._dummy_contacts[contact_key].msisdn == cmd.addr){
-                            reply_contact = api._dummy_contacts[contact_key];
-                        }
-                    }
-                    if (reply_contact){
-                        reply({
-                            success: true,
-                            created: false,
-                            contact: reply_contact
-                        });
-                    } else {
-                        api._dummy_contacts['contact-key'] = api._new_contact;
-                        api._dummy_contacts['contact-key'].msisdn = cmd.addr;
-                        reply({
-                            success: true,
-                            created: true,
-                            contact: api._new_contact
-                        });
-                    }
-                };
+        var tester;
 
-                api._handle_contacts_update = function(cmd, reply) {
-                    api._dummy_contacts[cmd.key] = cmd.fields;
-                    reply({
-                        success: true,
-                        contact: api._dummy_contacts[cmd.key]
+        beforeEach(function() {
+            tester = new vumigo.test_utils.ImTester(app.api, {
+                custom_setup: function (api) {
+                    api.config_store.config = JSON.stringify({
+                        quiz_data: quiz_data,
+                        testing: true,
+                        testing_mock_today: [2013,4,8,11,11],
+                        airtime_active: true,
+                        airtime_max_per_week: 50,
+                        airtime_values: {
+                            "VOD": 1200,
+                            "MTN": 1000,
+                            "CELLC": 1000,
+                            "8TA": 1000,
+                        },
+                        airtime_chance: 10,
+                        airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
+                            "You should receive airtime automatically soon. Dial *120*2112# " +
+                            "next MAMA Monday, for another chance to win.",
+                        airtime_hs_url: "http://api.hotsocket.co.za:8080/test/",
+                        airtime_hs_login: ["test", "pass"],
+                        network_mapping: [
+                            ['MTN', ['2783', '2773', '2778', '27710', '27717', '27718', '27719']],
+                            ['VOD',['2782', '2772', '2776', '2779', '27711', '27712', '27713', '27714', '27715', '27716']],
+                            ['CELLC', ['2784','2774']],
+                            ['8TA', ['27811', '27812', '27813', '27814']]
+                        ],
+                        sms_tag: ["mama-ussd", "outbound"],
+                        // testing_mock_today: [2013,5,21,16,50]
                     });
-                };
-                // TODO: This will break when contacts api gets changed to newer format
-                api._handle_contacts_update_extras = function(cmd, reply) {
-                    var success = true;
-                    for (var k in cmd.fields) {
-                        if (typeof cmd.fields[k]!="string"){  // This is always string ATM
-                            success = false;
-                            break;
-                        } else {
-                            api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k];
+                    fixtures.forEach(function (f) {
+                        api.load_http_fixture(f);
+                    });
+                    api._dummy_contacts = {};
+                    api._new_contact = {
+                        key: 'contact-key',
+                        surname: null,
+                        user_account: null,
+                        bbm_pin: null,
+                        msisdn: null,
+                        created_at: '2013-04-24 14:01:41.803693',
+                        gtalk_id: null,
+                        dob: null,
+                        groups: [],
+                        facebook_id: null,
+                        twitter_handle: null,
+                        email_address: null,
+                        name: null,
+                        extras: {}
+                    };
+                    api._handle_contacts_get_or_create = function(cmd, reply) {
+                        var reply_contact = false;
+                        for (var contact_key in api._dummy_contacts){
+                            if (api._dummy_contacts[contact_key].msisdn == cmd.addr){
+                                reply_contact = api._dummy_contacts[contact_key];
+                            }
                         }
-                    }
-                    reply({
-                        success: success,
-                        contact: api._dummy_contacts[cmd.key]
-                    });
-                };
-            },
-            async: true
+                        if (reply_contact){
+                            reply({
+                                success: true,
+                                created: false,
+                                contact: reply_contact
+                            });
+                        } else {
+                            api._dummy_contacts['contact-key'] = api._new_contact;
+                            api._dummy_contacts['contact-key'].msisdn = cmd.addr;
+                            reply({
+                                success: true,
+                                created: true,
+                                contact: api._new_contact
+                            });
+                        }
+                    };
+
+                    api._handle_contacts_update = function(cmd, reply) {
+                        api._dummy_contacts[cmd.key] = cmd.fields;
+                        reply({
+                            success: true,
+                            contact: api._dummy_contacts[cmd.key]
+                        });
+                    };
+                    // TODO: This will break when contacts api gets changed to newer format
+                    api._handle_contacts_update_extras = function(cmd, reply) {
+                        var success = true;
+                        for (var k in cmd.fields) {
+                            if (typeof cmd.fields[k]!="string"){  // This is always string ATM
+                                success = false;
+                                break;
+                            } else {
+                                api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k];
+                            }
+                        }
+                        reply({
+                            success: success,
+                            contact: api._dummy_contacts[cmd.key]
+                        });
+                    };
+                },
+                async: true
+            });
         });
 
         // first test should always start 'null, null' because we haven't started interacting yet
@@ -531,101 +557,129 @@ describe("On MAMA USSD line", function() {
 
         // These are used to mock API reponses
         // EXAMPLE: Response from google maps API
-        var fixtures = [];
-        var tester = new vumigo.test_utils.ImTester(app.api, {
-            custom_setup: function (api) {
-                api.config_store.config = JSON.stringify({
-                    quiz_data: JSON.parse(fs.readFileSync(quiz_file)),
-                    testing: true,
-                    testing_mock_today: [2013,4,8,11,11]
-                });
-                fixtures.forEach(function (f) {
-                    api.load_http_fixture(f);
-                });
-                api._dummy_contacts = {
-                    "f953710a2472447591bd59e906dc2c26": {
-                        key: "f953710a2472447591bd59e906dc2c26",
-                        surname: "Trotter",
-                        user_account: "test-0-user",
+        var fixtures = [
+            'test/fixtures/hs_login.json',
+            'test/fixtures/hs_recharge.json',
+        ];
+        var tester;
+
+        beforeEach(function() {
+            tester = new vumigo.test_utils.ImTester(app.api, {
+                custom_setup: function (api) {
+                    api.config_store.config = JSON.stringify({
+                        quiz_data: quiz_data,
+                        testing: true,
+                        testing_mock_today: [2013,4,8,11,11],
+                        airtime_active: true,
+                        airtime_max_per_week: 50,
+                        airtime_values: {
+                            "VOD": 1200,
+                            "MTN": 1000,
+                            "CELLC": 1000,
+                            "8TA": 1000,
+                        },
+                        airtime_chance: 10,
+                        airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
+                            "You should receive airtime automatically soon. Dial *120*2112# " +
+                            "next MAMA Monday, for another chance to win.",
+                        airtime_hs_url: "http://api.hotsocket.co.za:8080/test/",
+                        airtime_hs_login: ["test", "pass"],
+                        network_mapping: [
+                            ['MTN', ['2783', '2773', '2778', '27710', '27717', '27718', '27719']],
+                            ['VOD',['2782', '2772', '2776', '2779', '27711', '27712', '27713', '27714', '27715', '27716']],
+                            ['CELLC', ['2784','2774']],
+                            ['8TA', ['27811', '27812', '27813', '27814']]
+                        ],
+                        sms_tag: ["mama-ussd", "outbound"],
+                    });
+                    fixtures.forEach(function (f) {
+                        api.load_http_fixture(f);
+                    });
+                    api._dummy_contacts = {
+                        "f953710a2472447591bd59e906dc2c26": {
+                            key: "f953710a2472447591bd59e906dc2c26",
+                            surname: "Trotter",
+                            user_account: "test-0-user",
+                            bbm_pin: null,
+                            msisdn: "27845123456",
+                            created_at: "2013-04-24 14:01:41.803693",
+                            gtalk_id: null,
+                            dob: null,
+                            groups: ["group-a", "group-b"],
+                            facebook_id: null,
+                            twitter_handle: null,
+                            email_address: null,
+                            name: "Rodney",
+                            "extras-mama_registered": "2013-05-24T08:27:01.209Z",
+                            "extras-mama_total_signins": 0,
+                            "extras-mama_status": "pregnant",
+                            "extras-mama_child_dob": "2014-1",
+                            "extras-mama_optin_hiv": "yes",
+                            "extras-mama_optin_sms": "yes",
+                            "extras-mama_completed_quizzes": '["prebirth_4"]',
+                            "extras-mama_cohort_group": "initial",
+                            "extras-mama_cohort_group_history": '["initial"]'
+                        }
+                    };
+                    api._new_contact = {
+                        key: 'contact-key',
+                        surname: null,
+                        user_account: null,
                         bbm_pin: null,
-                        msisdn: "1234567",
-                        created_at: "2013-04-24 14:01:41.803693",
+                        msisdn: null,
+                        created_at: '2013-04-24 14:01:41.803693',
                         gtalk_id: null,
                         dob: null,
-                        groups: ["group-a", "group-b"],
+                        groups: [],
                         facebook_id: null,
                         twitter_handle: null,
                         email_address: null,
-                        name: "Rodney",
-                        "extras-mama_registered": "2013-05-24T08:27:01.209Z",
-                        "extras-mama_total_signins": 0,
-                        "extras-mama_status": "pregnant",
-                        "extras-mama_child_dob": "2014-1",
-                        "extras-mama_optin_hiv": "yes",
-                        "extras-mama_optin_sms": "yes",
-                        "extras-mama_completed_quizzes": '["prebirth_4"]',
-                        "extras-mama_cohort_group": "initial",
-                        "extras-mama_cohort_group_history": '["initial"]'
-                    }
-                };
-                api._new_contact = {
-                    key: 'contact-key',
-                    surname: null,
-                    user_account: null,
-                    bbm_pin: null,
-                    msisdn: null,
-                    created_at: '2013-04-24 14:01:41.803693',
-                    gtalk_id: null,
-                    dob: null,
-                    groups: [],
-                    facebook_id: null,
-                    twitter_handle: null,
-                    email_address: null,
-                    name: null,
-                    extras: {}
-                };
-                api._handle_contacts_get_or_create = function(cmd, reply) {
-                    var reply_contact = false;
-                    for (var contact_key in api._dummy_contacts){
-                        if (api._dummy_contacts[contact_key].msisdn == cmd.addr){
-                            reply_contact = api._dummy_contacts[contact_key];
+                        name: null,
+                        extras: {}
+                    };
+                    api._handle_contacts_get_or_create = function(cmd, reply) {
+                        var reply_contact = false;
+                        for (var contact_key in api._dummy_contacts){
+                            if (api._dummy_contacts[contact_key].msisdn == cmd.addr){
+                                reply_contact = api._dummy_contacts[contact_key];
+                            }
                         }
-                    }
-                    if (reply_contact){
+                        if (reply_contact){
+                            reply({
+                                success: true,
+                                created: false,
+                                contact: reply_contact
+                            });
+                        } else {
+                            api._dummy_contacts['contact-key'] = api._new_contact;
+                            api._dummy_contacts['contact-key'].msisdn = cmd.addr;
+                            reply({
+                                success: true,
+                                created: true,
+                                contact: api._new_contact
+                            });
+                        }
+                    };
+
+                    api._handle_contacts_update = function(cmd, reply) {
+                        api._dummy_contacts[cmd.key] = cmd.fields;
                         reply({
                             success: true,
-                            created: false,
-                            contact: reply_contact
+                            contact: api._dummy_contacts[cmd.key]
                         });
-                    } else {
-                        api._dummy_contacts['contact-key'] = api._new_contact;
-                        api._dummy_contacts['contact-key'].msisdn = cmd.addr;
+                    };
+
+                    // TODO: This will break when contacts api gets changed to newer format
+                    api._handle_contacts_update_extras = function(cmd, reply) {
+                        for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k]; }
                         reply({
                             success: true,
-                            created: true,
-                            contact: api._new_contact
+                            contact: api._dummy_contacts[cmd.key]
                         });
-                    }
-                };
-
-                api._handle_contacts_update = function(cmd, reply) {
-                    api._dummy_contacts[cmd.key] = cmd.fields;
-                    reply({
-                        success: true,
-                        contact: api._dummy_contacts[cmd.key]
-                    });
-                };
-
-                // TODO: This will break when contacts api gets changed to newer format
-                api._handle_contacts_update_extras = function(cmd, reply) {
-                    for (var k in cmd.fields) { api._dummy_contacts[cmd.key]['extras-'+k] = cmd.fields[k]; }
-                    reply({
-                        success: true,
-                        contact: api._dummy_contacts[cmd.key]
-                    });
-                };
-            },
-            async: true
+                    };
+                },
+                async: true
+            });
         });
 
         it("should start quiz week 5", function (done) {
@@ -635,7 +689,9 @@ describe("On MAMA USSD line", function() {
                 next_state: "initial_state",
                 response: "^Congrats on your pregnancy! What kind of foods should you eat now\\?[^]" +
                 "1. Fruit and vegetables[^]"+
-                "2. Chips and soda$"
+                "2. Chips and soda$",
+                from_addr: "27845123456"
+
             });
             p.then(function() {
                 var metrics_store = app.api.metrics['mama_metrics'];
@@ -652,7 +708,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_1_a_1",
                 response: "^Yes! It's time to eat plenty of healthy fruits and vegetables to" +
                 " nourish your growing baby.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -665,7 +722,8 @@ describe("On MAMA USSD line", function() {
                 response: "^No - try to avoid junk food that is high in fat & " +
                 "sugar. Now is the time to eat plenty of healthy fruits and " +
                 "vegetables to nourish your growing baby.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -684,7 +742,8 @@ describe("On MAMA USSD line", function() {
                 response: "^Is it important to know your HIV status when " +
                 "you're pregnant\\?[^]" +
                 "1. Yes, very important[^]" +
-                "2. No, it doesn't matter$"
+                "2. No, it doesn't matter$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -703,7 +762,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_2_a_1",
                 response: "^Yes! Knowing your HIV status is very important " +
                 "in pregnancy. You can help to keep your baby HIV negative.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -722,7 +782,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_2_a_2",
                 response: "^No - knowing your HIV status really does matter " +
                 "in pregnancy. You can help to keep your baby HIV negative.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -743,7 +804,8 @@ describe("On MAMA USSD line", function() {
                 next_state: "prebirth_5_q_3",
                 response: "^How big is your baby right now\\?[^]" +
                 "1. The size of a small bean[^]" +
-                "2. The size of a lemon$"
+                "2. The size of a lemon$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -766,7 +828,8 @@ describe("On MAMA USSD line", function() {
                 response: "^Yes - your baby is only just the size of a very " +
                 "small bean, but he already has tiny hands and feet. His heart " +
                 "is beating twice as fast as yours.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -789,7 +852,8 @@ describe("On MAMA USSD line", function() {
                 response: "^No - your baby is only just the size of a very " +
                 "small bean, but he already has tiny hands and feet. His heart " +
                 "is beating twice as fast as yours.[^]" +
-                "1. Next$"
+                "1. Next$",
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -811,7 +875,8 @@ describe("On MAMA USSD line", function() {
                 content: "1",
                 next_state: "prebirth_5_end",
                 response: "^Thanks! Goodbye!$",
-                continue_session: false
+                continue_session: false,
+                from_addr: "27845123456"
             });
             p.then(done, done);
         });
@@ -851,7 +916,163 @@ describe("On MAMA USSD line", function() {
             var cohort = state_creator.check_cohort(today, signup, dates);
             assert.equal(cohort, "embedded");
         });
-
     });
 });
 
+describe('Flickswitch airtime top-ups', function() {
+
+    var fixtures = [
+        'test/fixtures/hs_login.json',
+        'test/fixtures/hs_recharge.json',
+    ];
+
+    var tester;
+
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    quiz_data: quiz_data,
+                    testing: true,
+                    testing_mock_today: [2013,4,8,11,11],
+                    airtime_active: true,
+                    airtime_max_per_week: 50,
+                    airtime_values: {
+                        "VOD": 1200,
+                        "MTN": 1000,
+                        "CELLC": 1000,
+                        "8TA": 1000,
+                    },
+                    airtime_chance: 10,
+                    airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
+                        "You should receive airtime automatically soon. Dial *120*2112# " +
+                        "next MAMA Monday, for another chance to win.",
+                    airtime_hs_url: "http://api.hotsocket.co.za:8080/test/",
+                    airtime_hs_login: ["test", "pass"],
+                    network_mapping: [
+                        ['MTN', ['2783', '2773', '2778', '27710', '27717', '27718', '27719']],
+                        ['VOD',['2782', '2772', '2776', '2779', '27711', '27712', '27713', '27714', '27715', '27716']],
+                        ['CELLC', ['2784','2774']],
+                        ['8TA', ['27811', '27812', '27813', '27814']]
+                    ],
+                    sms_tag: ["mama-ussd", "outbound"],
+                });
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+
+    var go_to_end = function() {
+        var user = {
+            current_state: 'prebirth_5_q_3_a_1',
+            answers: {
+                initial_state: '1',
+                prebirth_5_q_1: 'prebirth_5_q_1_a_1',
+                prebirth_5_q_1_a_1: 'prebirth_5_q_2',
+                prebirth_5_q_2: 'prebirth_5_q_2_a_1',
+                prebirth_5_q_2_a_1: 'prebirth_5_q_3',
+                prebirth_5_q_3: 'prebirth_5_q_3_a_2'
+            }
+        };
+        return tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "prebirth_5_end",
+            response: "^Thanks! Goodbye!$",
+            continue_session: false,
+            from_addr: "27845123456"
+        });
+    };
+
+    var test_state_creator = function(cb) {
+        return go_to_end().then(function() {
+            return cb(app.api.im.state_creator, app.api);
+        });
+    };
+
+    it("gives a correct network_lookup as Vodacom", function(done){
+        test_state_creator(function(state_creator) {
+            var msisdn = "27711123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "VOD");
+        }).then(done, done);
+    });
+
+    it("gives a correct network_lookup as MTN", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27719123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "MTN");
+        }).then(done, done);
+    });
+
+    it("gives a correct network_lookup as Cell C", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27845123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "CELLC");
+        }).then(done, done);
+    });
+
+    it("gives a correct network_lookup as 8ta", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27813123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "8TA");
+        }).then(done, done);
+    });
+
+    it("gives a correct network_lookup as unknown", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27993123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "UNKNOWN");
+        }).then(done, done);
+    });
+
+    it("gives a airtime credit", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27845123456";
+            var credit = "1000";
+            var network = "CELLC";
+            var result = state_creator.airtime_credit(msisdn, network, credit);
+            result.add_callback(function(result){
+                assert.equal(result.response.status, "0000");
+                done();
+            });
+        });
+    });
+
+    it("gives a airtime credit everytime in test mode", function(done) {
+        test_state_creator(function(state_creator) {
+            var result = state_creator.run_airtime_giveaway();
+            result.add_callback(function(result){
+                assert.equal(result.success, true);
+                assert.equal(result.cmd, 'kv.incr');
+                done();
+            });
+        });
+    });
+
+    it('should increment the airtime_committed weekly counter', function(done) {
+        go_to_end().then(function() {
+            assert.equal(
+                app.api.kv_store['2013-05-06_airtime_committed'], 1);
+        }).then(done, done);
+    });
+
+    it('should not hit the FS api when airtime goes over the threshold', function(done) {
+        test_state_creator(function(state_creator, api) {
+            // mock hitting the max
+            api.kv_store['2013-05-06_airtime_committed'] = 50;
+            var p = api.im.state_creator.is_airtime_to_be_issued();
+            p.add_callback(function(airtime_to_be_issued) {
+                assert.equal(airtime_to_be_issued, false);
+                done();
+            });
+        });
+    });
+});

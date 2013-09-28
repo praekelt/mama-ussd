@@ -1,0 +1,7 @@
+{
+    "url": "http://api.hotsocket.co.za:8080/test/login/",
+    "method": "POST",
+    "content_type": "application/x-www-form-urlencoded",
+    "data": "username=test&password=pass&as_json=true",
+    "body": {"response":{"message":"Login Successful.","token":"awo7LCrtyF5qG5GDyvfpCpy2D3ALcdnoSdZ945UJsLcFBsKItdLU50THmik3UfHkWWwy1ohCGg/7T4AmSIiW15gPo7cXz2XdIMLh4heu0eo=","status":"0000"}}
+}
