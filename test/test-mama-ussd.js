@@ -919,160 +919,160 @@ describe("On MAMA USSD line", function() {
     });
 });
 
-// describe('Flickswitch airtime top-ups', function() {
+describe('Flickswitch airtime top-ups', function() {
 
-//     var fixtures = [
-//         'test/fixtures/hs_login.json',
-//         'test/fixtures/hs_recharge.json',
-//     ];
+    var fixtures = [
+        'test/fixtures/hs_login.json',
+        'test/fixtures/hs_recharge.json',
+    ];
 
-//     var tester;
+    var tester;
 
-//     beforeEach(function() {
-//         tester = new vumigo.test_utils.ImTester(app.api, {
-//             custom_setup: function (api) {
-//                 api.config_store.config = JSON.stringify({
-//                     quiz_data: quiz_data,
-//                     testing: true,
-//                     testing_mock_today: [2013,4,8,11,11],
-//                     airtime_active: true,
-//                     airtime_max_per_week: 50,
-//                     airtime_values: {
-//                         "VOD": 1200,
-//                         "MTN": 1000,
-//                         "CELLC": 1000,
-//                         "8TA": 1000,
-//                     },
-//                     airtime_chance: 10,
-//                     airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
-//                         "You should receive airtime automatically soon. Dial *120*2112# " +
-//                         "next MAMA Monday, for another chance to win.",
-//                     airtime_hs_url: "http://api.hotsocket.co.za:8080/test/",
-//                     airtime_hs_login: ["test", "pass"],
-//                     network_mapping: [
-//                         ['MTN', ['2783', '2773', '2778', '27710', '27717', '27718', '27719']],
-//                         ['VOD',['2782', '2772', '2776', '2779', '27711', '27712', '27713', '27714', '27715', '27716']],
-//                         ['CELLC', ['2784','2774']],
-//                         ['8TA', ['27811', '27812', '27813', '27814']]
-//                     ],
-//                     sms_tag: ["mama-ussd", "outbound"],
-//                 });
-//                 fixtures.forEach(function (f) {
-//                     api.load_http_fixture(f);
-//                 });
-//             },
-//             async: true
-//         });
-//     });
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    quiz_data: quiz_data,
+                    testing: true,
+                    testing_mock_today: [2013,4,8,11,11],
+                    airtime_active: true,
+                    airtime_max_per_week: 50,
+                    airtime_values: {
+                        "VOD": 1200,
+                        "MTN": 1000,
+                        "CELLC": 1000,
+                        "8TA": 1000,
+                    },
+                    airtime_chance: 10,
+                    airtime_sms: "Congratulations! You are a MAMA airtime winner. " +
+                        "You should receive airtime automatically soon. Dial *120*2112# " +
+                        "next MAMA Monday, for another chance to win.",
+                    airtime_hs_url: "http://api.hotsocket.co.za:8080/test/",
+                    airtime_hs_login: ["test", "pass"],
+                    network_mapping: [
+                        ['MTN', ['2783', '2773', '2778', '27710', '27717', '27718', '27719']],
+                        ['VOD',['2782', '2772', '2776', '2779', '27711', '27712', '27713', '27714', '27715', '27716']],
+                        ['CELLC', ['2784','2774']],
+                        ['8TA', ['27811', '27812', '27813', '27814']]
+                    ],
+                    sms_tag: ["mama-ussd", "outbound"],
+                });
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
 
-//     var go_to_end = function() {
-//         var user = {
-//             current_state: 'prebirth_5_q_3_a_1',
-//             answers: {
-//                 initial_state: '1',
-//                 prebirth_5_q_1: 'prebirth_5_q_1_a_1',
-//                 prebirth_5_q_1_a_1: 'prebirth_5_q_2',
-//                 prebirth_5_q_2: 'prebirth_5_q_2_a_1',
-//                 prebirth_5_q_2_a_1: 'prebirth_5_q_3',
-//                 prebirth_5_q_3: 'prebirth_5_q_3_a_2'
-//             }
-//         };
-//         return tester.check_state({
-//             user: user,
-//             content: "1",
-//             next_state: "prebirth_5_end",
-//             response: "^Thanks! Goodbye!$",
-//             continue_session: false,
-//             from_addr: "27845123456"
-//         });
-//     };
+    var go_to_end = function() {
+        var user = {
+            current_state: 'prebirth_5_q_3_a_1',
+            answers: {
+                initial_state: '1',
+                prebirth_5_q_1: 'prebirth_5_q_1_a_1',
+                prebirth_5_q_1_a_1: 'prebirth_5_q_2',
+                prebirth_5_q_2: 'prebirth_5_q_2_a_1',
+                prebirth_5_q_2_a_1: 'prebirth_5_q_3',
+                prebirth_5_q_3: 'prebirth_5_q_3_a_2'
+            }
+        };
+        return tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "prebirth_5_end",
+            response: "^Thanks! Goodbye!$",
+            continue_session: false,
+            from_addr: "27845123456"
+        });
+    };
 
-//     var test_state_creator = function(cb) {
-//         return go_to_end().then(function() {
-//             return cb(app.api.im.state_creator, app.api);
-//         });
-//     };
+    var test_state_creator = function(cb) {
+        return go_to_end().then(function() {
+            return cb(app.api.im.state_creator, app.api);
+        });
+    };
 
-//     it("gives a correct network_lookup as Vodacom", function(done){
-//         test_state_creator(function(state_creator) {
-//             var msisdn = "27711123456";
-//             var network = state_creator.network_lookup(msisdn);
-//             assert.equal(network, "VOD");
-//         }).then(done, done);
-//     });
+    it("gives a correct network_lookup as Vodacom", function(done){
+        test_state_creator(function(state_creator) {
+            var msisdn = "27711123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "VOD");
+        }).then(done, done);
+    });
 
-//     it("gives a correct network_lookup as MTN", function(done) {
-//         test_state_creator(function(state_creator) {
-//             var msisdn = "27719123456";
-//             var network = state_creator.network_lookup(msisdn);
-//             assert.equal(network, "MTN");
-//         }).then(done, done);
-//     });
+    it("gives a correct network_lookup as MTN", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27719123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "MTN");
+        }).then(done, done);
+    });
 
-//     it("gives a correct network_lookup as Cell C", function(done) {
-//         test_state_creator(function(state_creator) {
-//             var msisdn = "27845123456";
-//             var network = state_creator.network_lookup(msisdn);
-//             assert.equal(network, "CELLC");
-//         }).then(done, done);
-//     });
+    it("gives a correct network_lookup as Cell C", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27845123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "CELLC");
+        }).then(done, done);
+    });
 
-//     it("gives a correct network_lookup as 8ta", function(done) {
-//         test_state_creator(function(state_creator) {
-//             var msisdn = "27813123456";
-//             var network = state_creator.network_lookup(msisdn);
-//             assert.equal(network, "8TA");
-//         }).then(done, done);
-//     });
+    it("gives a correct network_lookup as 8ta", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27813123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "8TA");
+        }).then(done, done);
+    });
 
-//     it("gives a correct network_lookup as unknown", function(done) {
-//         test_state_creator(function(state_creator) {
-//             var msisdn = "27993123456";
-//             var network = state_creator.network_lookup(msisdn);
-//             assert.equal(network, "UNKNOWN");
-//         }).then(done, done);
-//     });
+    it("gives a correct network_lookup as unknown", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27993123456";
+            var network = state_creator.network_lookup(msisdn);
+            assert.equal(network, "UNKNOWN");
+        }).then(done, done);
+    });
 
-//     it("gives a airtime credit", function(done) {
-//         test_state_creator(function(state_creator) {
-//             var msisdn = "27845123456";
-//             var credit = "1000";
-//             var network = "CELLC";
-//             var result = state_creator.airtime_credit(msisdn, network, credit);
-//             result.add_callback(function(result){
-//                 assert.equal(result.response.status, "0000");
-//                 done();
-//             });
-//         });
-//     });
+    it("gives a airtime credit", function(done) {
+        test_state_creator(function(state_creator) {
+            var msisdn = "27845123456";
+            var credit = "1000";
+            var network = "CELLC";
+            var result = state_creator.airtime_credit(msisdn, network, credit);
+            result.add_callback(function(result){
+                assert.equal(result.response.status, "0000");
+                done();
+            });
+        });
+    });
 
-//     it("gives a airtime credit everytime in test mode", function(done) {
-//         test_state_creator(function(state_creator) {
-//             var result = state_creator.run_airtime_giveaway();
-//             result.add_callback(function(result){
-//                 assert.equal(result.success, true);
-//                 assert.equal(result.cmd, 'kv.incr');
-//                 done();
-//             });
-//         });
-//     });
+    it("gives a airtime credit everytime in test mode", function(done) {
+        test_state_creator(function(state_creator) {
+            var result = state_creator.run_airtime_giveaway();
+            result.add_callback(function(result){
+                assert.equal(result.success, true);
+                assert.equal(result.cmd, 'kv.incr');
+                done();
+            });
+        });
+    });
 
-//     it('should increment the airtime_committed weekly counter', function(done) {
-//         go_to_end().then(function() {
-//             assert.equal(
-//                 app.api.kv_store['2013-05-06_airtime_committed'], 1);
-//         }).then(done, done);
-//     });
+    it('should increment the airtime_committed weekly counter', function(done) {
+        go_to_end().then(function() {
+            assert.equal(
+                app.api.kv_store['2013-05-06_airtime_committed'], 1);
+        }).then(done, done);
+    });
 
-//     it('should not hit the FS api when airtime goes over the threshold', function(done) {
-//         test_state_creator(function(state_creator, api) {
-//             // mock hitting the max
-//             api.kv_store['2013-05-06_airtime_committed'] = 50;
-//             var p = api.im.state_creator.is_airtime_to_be_issued();
-//             p.add_callback(function(airtime_to_be_issued) {
-//                 assert.equal(airtime_to_be_issued, false);
-//                 done();
-//             });
-//         });
-//     });
-// });
+    it('should not hit the FS api when airtime goes over the threshold', function(done) {
+        test_state_creator(function(state_creator, api) {
+            // mock hitting the max
+            api.kv_store['2013-05-06_airtime_committed'] = 50;
+            var p = api.im.state_creator.is_airtime_to_be_issued();
+            p.add_callback(function(airtime_to_be_issued) {
+                assert.equal(airtime_to_be_issued, false);
+                done();
+            });
+        });
+    });
+});

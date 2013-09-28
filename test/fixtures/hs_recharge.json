@@ -2,6 +2,6 @@
     "url": "http://api.hotsocket.co.za:8080/test/recharge/",
     "method": "POST",
     "content_type": "application/x-www-form-urlencoded",
-    "data": "token=awo7LCrtyF5qG5GDyvfpCpy2D3ALcdnoSdZ945UJsLcFBsKItdLU50THmik3UfHkWWwy1ohCGg%2F7T4AmSIiW15gPo7cXz2XdIMLh4heu0eo%3D&username=test&recipient_msisdn=27845123456&product_code=AIRTIME&denomination=1000&network_code=CELLC&reference=1368004260000&notes=MAMA%20for%2027845123456&as_json=true",
+    "data": "token=awo7LCrtyF5qG5GDyvfpCpy2D3ALcdnoSdZ945UJsLcFBsKItdLU50THmik3UfHkWWwy1ohCGg%2F7T4AmSIiW15gPo7cXz2XdIMLh4heu0eo%3D&username=test&recipient_msisdn=27845123456&product_code=AIRTIME&denomination=1000&network_code=CELLC&reference=1368011460000&notes=MAMA%20for%2027845123456&as_json=true",
     "body": {"response":{"message":"Successfully submitted recharge.","serveport_ref":2338,"status":"0000","hotsocket_ref":2338}}
 }
